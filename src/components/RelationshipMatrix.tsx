@@ -13,7 +13,7 @@ import {
   MessageCircle,
   ArrowUpRight,
   Maximize2
-} from 'lucide-react';
+} from '../icons';
 
 interface RelationshipMatrixProps {
   contacts: Contact[];
