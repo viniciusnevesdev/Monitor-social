@@ -1,5 +1,5 @@
 import React from 'react';
-import { Compass, Users, PlusCircle, Target, Sliders } from 'lucide-react';
+import { Compass, Users, PlusCircle, Target, Sliders } from '../icons';
 
 export type TabType = 'painel' | 'contatos' | 'registrar' | 'metas' | 'config';
 
