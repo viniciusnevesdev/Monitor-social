@@ -12,7 +12,7 @@ import {
   Award,
   Plus,
   Send
-} from 'lucide-react';
+} from '../icons';
 
 interface SocialGoalsViewProps {
   contacts: Contact[];
