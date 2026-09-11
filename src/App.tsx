@@ -7,12 +7,13 @@ import { NeglectedDashboard } from './components/NeglectedDashboard';
 import { ContactsList } from './components/ContactsList';
 import { SocialGoalsView } from './components/SocialGoalsView';
 import { SettingsView } from './components/SettingsView';
+import { IconEditorView } from './components/IconEditorView';
 import { ContactFormModal } from './components/ContactFormModal';
 import { ContactDetailModal } from './components/ContactDetailModal';
 import { LogInteractionModal } from './components/LogInteractionModal';
 import { ScheduleMeetModal } from './components/ScheduleMeetModal';
 import { ImportContactsModal } from './components/ImportContactsModal';
-import { Bell, Sparkles, Heart } from 'lucide-react';
+import { Bell, Sparkles, Heart } from './icons';
 
 const STORAGE_KEY = 'social_sync_contacts_v1';
 
@@ -44,6 +45,13 @@ export default function App() {
 
   // 2. Navegação por abas
   const [currentTab, setCurrentTab] = useState<TabType>('painel');
+  const [isIconEditorOpen, setIsIconEditorOpen] = useState(() => window.location.hash === '#icon-editor');
+
+  useEffect(() => {
+    const syncHash = () => setIsIconEditorOpen(window.location.hash === '#icon-editor');
+    window.addEventListener('hashchange', syncHash);
+    return () => window.removeEventListener('hashchange', syncHash);
+  }, []);
 
   // 3. Modais
   const [isLogModalOpen, setIsLogModalOpen] = useState(false);
@@ -258,6 +266,17 @@ export default function App() {
   }).length;
 
   const selectedContact = contacts.find((c) => c.id === selectedContactDetailId) || null;
+
+  if (isIconEditorOpen) {
+    return (
+      <IconEditorView
+        onClose={() => {
+          history.replaceState(null, '', window.location.pathname + window.location.search);
+          setIsIconEditorOpen(false);
+        }}
+      />
+    );
+  }
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col antialiased">
