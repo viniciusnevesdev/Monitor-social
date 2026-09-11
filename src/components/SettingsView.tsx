@@ -25,6 +25,8 @@ import {
   Lightbulb
 } from 'lucide-react';
 
+const APP_VERSION = '1.0.0';
+
 const SUGGESTIONS_LIST = [
   {
     id: 'sug-1',
@@ -243,9 +245,14 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
     <div className="space-y-6 pb-28 max-w-2xl mx-auto">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
-          Ajustes & Aplicativo PWA
-        </h1>
+        <div className="flex items-center gap-2 flex-wrap">
+          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
+            Ajustes & Aplicativo PWA
+          </h1>
+          <span className="text-[11px] font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 px-2 py-0.5 rounded-full">
+            v{APP_VERSION}
+          </span>
+        </div>
         <p className="text-sm text-slate-500 mt-0.5">
           Gerencie a instalação no seu dispositivo, faça cópias de segurança e entenda a lógica de pontuação.
         </p>
