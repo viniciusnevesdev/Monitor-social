@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Contact, ContactCategory } from '../types';
 import { CATEGORY_LABELS } from '../utils/calculations';
-import { X, Heart, Star, Clock, Bell, User, Phone, Check } from 'lucide-react';
+import { X, Heart, Star, Clock, Bell, User, Phone, Check } from '../icons';
 
 interface ContactFormModalProps {
   isOpen: boolean;
