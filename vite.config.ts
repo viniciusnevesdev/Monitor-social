@@ -20,9 +20,9 @@ export default defineConfig(() => {
         ],
         manifest: {
           id: '/',
-          name: 'Monitor de Interações Sociais',
-          short_name: 'SocialSync',
-          description: 'PWA de monitoramento de interações sociais, cálculo de intimidade e priorização de contatos negligenciados.',
+          name: 'Laços',
+          short_name: 'Laços',
+          description: 'Laços — PWA de monitoramento de interações sociais, cálculo de intimidade e priorização de contatos negligenciados.',
           theme_color: '#3685f5',
           background_color: '#f8fafc',
           display: 'standalone',
