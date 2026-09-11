@@ -18,7 +18,7 @@ import {
   Heart,
   Star,
   Grid
-} from 'lucide-react';
+} from '../icons';
 
 interface NeglectedDashboardProps {
   contacts: Contact[];
