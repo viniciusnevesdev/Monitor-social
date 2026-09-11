@@ -1,10 +1,11 @@
-import express from 'express';
+import express, { NextFunction, Request, Response } from 'express';
+import crypto from 'crypto';
 import path from 'path';
 import fs from 'fs';
 import { createServer as createViteServer } from 'vite';
 
 const app = express();
-const APP_VERSION = '1.2.0';
+const APP_VERSION = '1.3.0';
 const PORT = Number(process.env.PORT) || 3000;
 const IS_PRODUCTION = process.env.NODE_ENV === 'production' || Boolean(process.env.RAILWAY_ENVIRONMENT_NAME);
 
@@ -16,10 +17,35 @@ const DATA_DIR = process.env.RAILWAY_VOLUME_MOUNT_PATH
   : path.resolve('data');
 const SYNC_FILE = path.join(DATA_DIR, 'cloud_vault.json');
 const ICON_OVERRIDES_FILE = path.join(DATA_DIR, 'icon_overrides.json');
+const ICON_BACKUP_DIR = path.join(DATA_DIR, 'icon-backups');
+const ICON_FINAL_BACKUP_FILE = path.join(ICON_BACKUP_DIR, 'icon_overrides-v1.2.0-final.json');
+const ICON_EDITOR_KEY = process.env.ICON_EDITOR_KEY || '';
 
 if (!fs.existsSync(DATA_DIR)) {
   fs.mkdirSync(DATA_DIR, { recursive: true });
 }
+
+function ensureFinalIconBackup() {
+  try {
+    if (!fs.existsSync(ICON_OVERRIDES_FILE)) {
+      console.warn('Backup de ícones não criado: configuração global ainda não existe.');
+      return;
+    }
+    if (!fs.existsSync(ICON_BACKUP_DIR)) {
+      fs.mkdirSync(ICON_BACKUP_DIR, { recursive: true });
+    }
+    if (!fs.existsSync(ICON_FINAL_BACKUP_FILE)) {
+      fs.copyFileSync(ICON_OVERRIDES_FILE, ICON_FINAL_BACKUP_FILE, fs.constants.COPYFILE_EXCL);
+      console.log(`Icon backup created: ${ICON_FINAL_BACKUP_FILE}`);
+    } else {
+      console.log(`Icon backup already exists: ${ICON_FINAL_BACKUP_FILE}`);
+    }
+  } catch (err) {
+    console.error('Erro ao criar backup final dos ícones:', err);
+  }
+}
+
+ensureFinalIconBackup();
 
 function readCloudVault(): Record<string, { contacts: any[]; updatedAt: string }> {
   try {
@@ -116,6 +142,51 @@ function validateIconOverrides(input: unknown): { ok: true; overrides: Record<st
   return { ok: true, overrides };
 }
 
+const authAttempts = new Map<string, { count: number; resetAt: number }>();
+const AUTH_WINDOW_MS = 15 * 60 * 1000;
+const AUTH_MAX_FAILURES = 5;
+
+function editorClientId(req: Request) {
+  return req.ip || req.socket.remoteAddress || 'unknown';
+}
+
+function safeKeyEqual(received: string, expected: string) {
+  const a = Buffer.from(received);
+  const b = Buffer.from(expected);
+  return a.length === b.length && crypto.timingSafeEqual(a, b);
+}
+
+function requireIconEditorAuth(req: Request, res: Response, next: NextFunction) {
+  if (!ICON_EDITOR_KEY) {
+    return res.status(503).json({ error: 'Editor protegido ainda não configurado no servidor.' });
+  }
+
+  const clientId = editorClientId(req);
+  const now = Date.now();
+  const previous = authAttempts.get(clientId);
+
+  if (previous && previous.resetAt > now && previous.count >= AUTH_MAX_FAILURES) {
+    return res.status(429).json({ error: 'Muitas tentativas. Aguarde alguns minutos antes de tentar novamente.' });
+  }
+
+  if (previous && previous.resetAt <= now) {
+    authAttempts.delete(clientId);
+  }
+
+  const supplied = String(req.get('x-icon-editor-key') || '');
+  if (!supplied || !safeKeyEqual(supplied, ICON_EDITOR_KEY)) {
+    const current = authAttempts.get(clientId);
+    authAttempts.set(clientId, {
+      count: (current?.count || 0) + 1,
+      resetAt: current?.resetAt && current.resetAt > now ? current.resetAt : now + AUTH_WINDOW_MS,
+    });
+    return res.status(401).json({ error: 'Chave do editor incorreta.' });
+  }
+
+  authAttempts.delete(clientId);
+  return next();
+}
+
 // 1. Health check
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', version: APP_VERSION, serverTime: new Date().toISOString() });
@@ -127,7 +198,11 @@ app.get('/api/icon-overrides', (req, res) => {
   return res.json(readIconOverrides());
 });
 
-app.put('/api/icon-overrides', (req, res) => {
+app.post('/api/icon-overrides/verify', requireIconEditorAuth, (req, res) => {
+  return res.json({ success: true });
+});
+
+app.put('/api/icon-overrides', requireIconEditorAuth, (req, res) => {
   const validation = validateIconOverrides(req.body?.overrides);
   if ('error' in validation) {
     return res.status(400).json({ error: validation.error });
