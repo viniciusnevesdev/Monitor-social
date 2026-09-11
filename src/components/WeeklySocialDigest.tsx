@@ -11,7 +11,7 @@ import {
   ArrowRight,
   MessageCircle,
   PlusCircle
-} from 'lucide-react';
+} from '../icons';
 
 interface WeeklySocialDigestProps {
   contacts: Contact[];
