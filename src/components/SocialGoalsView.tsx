@@ -69,8 +69,8 @@ export const SocialGoalsView: React.FC<SocialGoalsViewProps> = ({
 
         new Notification(title, {
           body,
-          icon: '/icon.svg',
-          badge: '/icon.svg',
+          icon: '/social-icon-v1.3.1-512.png',
+          badge: '/social-icon-v1.3.1-512.png',
         });
         setNotificationStatus('Notificação de teste enviada com sucesso!');
       } else {

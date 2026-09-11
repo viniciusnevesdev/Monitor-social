@@ -4,6 +4,11 @@ PWA de monitoramento de interações sociais.
 
 ## Versão atual
 
+**v1.3.1**
+
+- Ícone principal atualizado com a nova identidade visual de contatos e relações sociais.
+- Arquivos de ícone receberam novos nomes para forçar a atualização em instalações já existentes.
+
 **v1.3.0**
 
 ## Execução
