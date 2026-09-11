@@ -11,32 +11,38 @@ export default defineConfig(() => {
       tailwindcss(),
       VitePWA({
         registerType: 'autoUpdate',
-        includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'icon.svg', 'pwa-192x192.png', 'pwa-512x512.png'],
+        includeAssets: [
+          'beta-icon-v1.4.0-beta.2-favicon.png',
+          'beta-icon-v1.4.0-beta.2-apple.png',
+          'beta-icon-v1.4.0-beta.2-192.png',
+          'beta-icon-v1.4.0-beta.2-512.png',
+          'beta-icon-v1.4.0-beta.2-maskable.png',
+        ],
         manifest: {
           id: '/',
           name: 'Monitor de Interações Sociais',
           short_name: 'SocialSync',
           description: 'PWA de monitoramento de interações sociais, cálculo de intimidade e priorização de contatos negligenciados.',
-          theme_color: '#4f46e5',
+          theme_color: '#3685f5',
           background_color: '#f8fafc',
           display: 'standalone',
           start_url: '/',
           scope: '/',
           icons: [
             {
-              src: '/pwa-192x192.png',
+              src: '/beta-icon-v1.4.0-beta.2-192.png',
               sizes: '192x192',
               type: 'image/png',
               purpose: 'any',
             },
             {
-              src: '/pwa-512x512.png',
+              src: '/beta-icon-v1.4.0-beta.2-512.png',
               sizes: '512x512',
               type: 'image/png',
               purpose: 'any',
             },
             {
-              src: '/pwa-maskable-512x512.png',
+              src: '/beta-icon-v1.4.0-beta.2-maskable.png',
               sizes: '512x512',
               type: 'image/png',
               purpose: 'maskable',
