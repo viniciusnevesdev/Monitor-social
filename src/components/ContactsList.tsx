@@ -14,7 +14,7 @@ import {
   AlertTriangle,
   Upload,
   Smartphone
-} from 'lucide-react';
+} from '../icons';
 
 interface ContactsListProps {
   contacts: Contact[];
