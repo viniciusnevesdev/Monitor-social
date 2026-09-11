@@ -4,6 +4,10 @@ PWA de monitoramento de interações sociais. Esta branch é destinada a testes 
 
 ## Versão atual
 
+**v1.4.0-beta.3**
+
+- Biblioteca global de 49 ícones personalizados sincronizada integralmente com a versão oficial.
+
 **v1.4.0-beta.2**
 
 - Ícone exclusivo da versão beta atualizado, com selo visual BETA.
