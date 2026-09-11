@@ -83,7 +83,7 @@ export const BottomNavBar: React.FC<BottomNavBarProps> = ({
                   <div className="relative">
                     <Icon
                       className={`w-5 h-5 transition-transform duration-200 ${
-                        isActive ? 'scale-110 text-indigo-600 stroke-[2.4]' : 'group-hover:scale-105 stroke-[1.8]'
+                        isActive ? 'scale-110 text-indigo-600' : 'group-hover:scale-105'
                       } ${tab.isPrimaryAction && !isActive ? 'text-indigo-500' : ''}`}
                     />
                     
