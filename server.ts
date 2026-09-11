@@ -11,7 +11,9 @@ const IS_PRODUCTION = process.env.NODE_ENV === 'production' || Boolean(process.e
 app.use(express.json({ limit: '10mb' }));
 
 // Diretório para armazenamento local do cofre de sincronização em nuvem
-const DATA_DIR = process.env.RAILWAY_VOLUME_MOUNT_PATH\n  ? path.resolve(process.env.RAILWAY_VOLUME_MOUNT_PATH)\n  : path.resolve('data');
+const DATA_DIR = process.env.RAILWAY_VOLUME_MOUNT_PATH
+  ? path.resolve(process.env.RAILWAY_VOLUME_MOUNT_PATH)
+  : path.resolve('data');
 const SYNC_FILE = path.join(DATA_DIR, 'cloud_vault.json');
 
 if (!fs.existsSync(DATA_DIR)) {
@@ -110,7 +112,8 @@ async function startServer() {
   }
 
   app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Server v${APP_VERSION} running on port ${PORT}`);\n    console.log(`Persistent data directory: ${DATA_DIR}`);
+    console.log(`Server v${APP_VERSION} running on port ${PORT}`);
+    console.log(`Persistent data directory: ${DATA_DIR}`);
   });
 }
 
