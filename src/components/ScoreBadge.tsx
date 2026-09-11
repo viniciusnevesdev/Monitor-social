@@ -1,5 +1,5 @@
 import React from 'react';
-import { Heart, Star, Sparkles, AlertTriangle, CheckCircle2, Clock } from 'lucide-react';
+import { Heart, Star, Sparkles, AlertTriangle, CheckCircle2, Clock } from '../icons';
 
 interface ScoreBadgeProps {
   type: 'intimacy' | 'importance' | 'wellbeing' | 'priority' | 'status';
