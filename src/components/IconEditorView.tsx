@@ -101,7 +101,7 @@ export const IconEditorView: React.FC<IconEditorViewProps> = ({ onClose }) => {
 
       <main className="max-w-6xl mx-auto px-4 py-5 pb-24">
         <div className="mb-4 rounded-2xl border border-indigo-400/15 bg-indigo-500/8 px-4 py-3 text-xs text-slate-300 leading-relaxed">
-          Não existe controle de peso, espessura ou contorno. Você pode colar um SVG completo, um fragmento como <path>, código com cabeçalho XML ou SVG copiado de JSX/React. O editor normaliza apenas o formato técnico e preserva a geometria visual.
+          Não existe controle de peso, espessura ou contorno. Você pode colar um SVG completo, um fragmento como <code className="text-indigo-200">&lt;path&gt;</code>, código com cabeçalho XML ou SVG copiado de JSX/React. O editor normaliza apenas o formato técnico e preserva a geometria visual.
         </div>
 
         {message && (
