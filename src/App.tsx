@@ -296,7 +296,7 @@ export default function App() {
             </div>
             <div>
               <span className="text-base font-extrabold tracking-tight bg-gradient-to-r from-indigo-700 via-indigo-600 to-cyan-600 bg-clip-text text-transparent">
-                SocialSync
+                Laços
               </span>
               <span className="hidden sm:inline text-xs text-slate-400 ml-2 font-medium">
                 Monitor de Relações & Intimidade
