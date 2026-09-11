@@ -1,11 +1,13 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   ICON_COMPONENTS,
   ICON_NAMES,
   AppIconName,
   getAllIconOverrides,
+  loadGlobalIconOverrides,
   resetIconOverride,
   sanitizeCustomSvg,
+  saveGlobalIconOverrides,
   setIconOverride,
 } from '../icons';
 import { APP_VERSION } from '../version';
@@ -20,9 +22,35 @@ function labelFor(name: string) {
 
 export const IconEditorView: React.FC<IconEditorViewProps> = ({ onClose }) => {
   const [query, setQuery] = useState('');
-  const [overrides, setOverrides] = useState<Record<string,string>>(() => getAllIconOverrides());
-  const [drafts, setDrafts] = useState<Record<string,string>>(() => ({ ...getAllIconOverrides() }));
-  const [message, setMessage] = useState('');
+  const [overrides, setOverrides] = useState<Record<string,string>>({});
+  const [drafts, setDrafts] = useState<Record<string,string>>({});
+  const [message, setMessage] = useState('Carregando configuração global…');
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [dirty, setDirty] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+    loadGlobalIconOverrides()
+      .then((globalOverrides) => {
+        if (!active) return;
+        setOverrides(globalOverrides);
+        setDrafts({ ...globalOverrides });
+        setMessage('Configuração global carregada. Nenhuma escolha antiga deste aparelho foi importada.');
+      })
+      .catch(() => {
+        if (!active) return;
+        setOverrides({});
+        setDrafts({});
+        setMessage('Não foi possível carregar a configuração global. Tente novamente.');
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const visibleIcons = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -44,7 +72,8 @@ export const IconEditorView: React.FC<IconEditorViewProps> = ({ onClose }) => {
       const next = getAllIconOverrides();
       setOverrides(next);
       setDrafts((prev) => ({ ...prev, [name]: next[name] || '' }));
-      setMessage(`${labelFor(name)} atualizado.`);
+      setDirty(true);
+      setMessage(`${labelFor(name)} pré-visualizado. Use “Confirmar e salvar todos” para publicar globalmente.`);
     } catch {
       setMessage('Não foi possível aplicar esse SVG.');
     }
@@ -54,7 +83,36 @@ export const IconEditorView: React.FC<IconEditorViewProps> = ({ onClose }) => {
     resetIconOverride(name);
     setOverrides(getAllIconOverrides());
     setDrafts((prev) => ({ ...prev, [name]: '' }));
-    setMessage(`${labelFor(name)} restaurado ao desenho original.`);
+    setDirty(true);
+    setMessage(`${labelFor(name)} restaurado na pré-visualização. Confirme no botão final para publicar.`);
+  };
+
+  const saveAll = async () => {
+    const next: Record<string,string> = {};
+
+    for (const name of ICON_NAMES) {
+      const raw = (drafts[name] || '').trim();
+      if (!raw) continue;
+      if (!sanitizeCustomSvg(raw)) {
+        setMessage('O código de ' + labelFor(name) + ' não é um SVG válido. Corrija esse ícone antes de salvar.');
+        return;
+      }
+      next[name] = raw;
+    }
+
+    setSaving(true);
+    setMessage('Salvando os ícones para todos os aparelhos…');
+    try {
+      const saved = await saveGlobalIconOverrides(next);
+      setOverrides(saved);
+      setDrafts({ ...saved });
+      setDirty(false);
+      setMessage('Pronto. ' + Object.keys(saved).length + ' ícones personalizados foram salvos globalmente.');
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : 'Não foi possível salvar os ícones globalmente.');
+    } finally {
+      setSaving(false);
+    }
   };
 
   const paste = async (name: AppIconName) => {
@@ -62,7 +120,8 @@ export const IconEditorView: React.FC<IconEditorViewProps> = ({ onClose }) => {
       const text = await navigator.clipboard.readText();
       if (!text) throw new Error();
       setDrafts((prev) => ({ ...prev, [name]: text }));
-      setMessage('SVG colado no campo.');
+      setDirty(true);
+      setMessage('SVG colado no campo. Você pode pré-visualizar ou confirmar tudo no botão final.');
     } catch {
       setMessage('Não consegui ler a área de transferência. Cole manualmente.');
     }
@@ -99,9 +158,9 @@ export const IconEditorView: React.FC<IconEditorViewProps> = ({ onClose }) => {
         </div>
       </header>
 
-      <main className="max-w-6xl mx-auto px-4 py-5 pb-24">
+      <main className="max-w-6xl mx-auto px-4 py-5 pb-36">
         <div className="mb-4 rounded-2xl border border-indigo-400/15 bg-indigo-500/8 px-4 py-3 text-xs text-slate-300 leading-relaxed">
-          Não existe controle de peso, espessura ou contorno. Você pode colar um SVG completo, um fragmento como <code className="text-indigo-200">&lt;path&gt;</code>, código com cabeçalho XML ou SVG copiado de JSX/React. O editor normaliza apenas o formato técnico e preserva a geometria visual.
+          Não existe controle de peso, espessura ou contorno. Você pode colar um SVG completo, um fragmento como <code className="text-indigo-200">&lt;path&gt;</code>, código com cabeçalho XML ou SVG copiado de JSX/React. O editor normaliza apenas o formato técnico e preserva a geometria visual. As escolhas só se tornam globais quando você toca em “Confirmar e salvar todos”.
         </div>
 
         {message && (
@@ -113,7 +172,7 @@ export const IconEditorView: React.FC<IconEditorViewProps> = ({ onClose }) => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {visibleIcons.map((name) => {
             const Icon = ICON_COMPONENTS[name];
-            const custom = Boolean(overrides[name]);
+            const custom = Boolean((drafts[name] || '').trim());
             const draft = drafts[name] ?? '';
 
             return (
@@ -133,7 +192,10 @@ export const IconEditorView: React.FC<IconEditorViewProps> = ({ onClose }) => {
 
                 <textarea
                   value={draft}
-                  onChange={(e) => setDrafts((prev) => ({ ...prev, [name]: e.target.value }))}
+                  onChange={(e) => {
+                    setDrafts((prev) => ({ ...prev, [name]: e.target.value }));
+                    setDirty(true);
+                  }}
                   spellCheck={false}
                   placeholder={`Cole aqui o SVG que substituirá ${labelFor(name)}`}
                   className="mt-3 w-full min-h-28 resize-y rounded-xl border border-white/10 bg-black/20 px-3 py-2.5 font-mono text-[10px] leading-relaxed text-slate-200 placeholder:text-slate-600 outline-none focus:border-indigo-400/50"
@@ -172,6 +234,27 @@ export const IconEditorView: React.FC<IconEditorViewProps> = ({ onClose }) => {
           <div className="py-16 text-center text-sm text-slate-500">Nenhum ícone encontrado.</div>
         )}
       </main>
+
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-slate-950/95 backdrop-blur-xl">
+        <div className="max-w-6xl mx-auto px-4 py-3 flex items-center gap-3">
+          <div className="min-w-0 flex-1">
+            <div className="text-xs font-bold text-slate-100">
+              {dirty ? 'Alterações ainda não publicadas' : 'Configuração global sincronizada'}
+            </div>
+            <div className="text-[10px] text-slate-500 mt-0.5">
+              O salvamento substitui a configuração global em todos os aparelhos. Escolhas antigas do localStorage não são importadas.
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={saveAll}
+            disabled={loading || saving}
+            className="shrink-0 rounded-xl bg-indigo-600 px-4 py-3 text-xs font-extrabold text-white shadow-lg shadow-indigo-950/40 disabled:opacity-50"
+          >
+            {saving ? 'Salvando…' : 'Confirmar e salvar todos'}
+          </button>
+        </div>
+      </div>
     </div>
   );
 };

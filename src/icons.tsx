@@ -1,7 +1,7 @@
 import React from 'react';
 import * as Lucide from 'lucide-react';
 
-export const ICON_OVERRIDE_STORAGE_KEY = 'monitor_social_icon_overrides_v1';
+const LEGACY_ICON_OVERRIDE_STORAGE_KEY = 'monitor_social_icon_overrides_v1';
 
 export const ICON_NAMES = [
   'AlertCircle','AlertOctagon','AlertTriangle','ArrowRight','ArrowUpDown','ArrowUpRight','Award','Bell','BellRing',
@@ -18,36 +18,97 @@ type IconProps = React.SVGProps<SVGSVGElement> & {
   absoluteStrokeWidth?: boolean;
 };
 
-function readOverrides(): Record<string,string> {
-  if (typeof window === 'undefined') return {};
-  try {
-    const parsed = JSON.parse(localStorage.getItem(ICON_OVERRIDE_STORAGE_KEY) || '{}');
-    return parsed && typeof parsed === 'object' ? parsed : {};
-  } catch {
-    return {};
+let runtimeOverrides: Record<string,string> = {};
+let overrideRevision = 0;
+const overrideListeners = new Set<() => void>();
+
+function notifyOverrideListeners() {
+  overrideRevision += 1;
+  overrideListeners.forEach((listener) => listener());
+}
+
+function subscribeToOverrides(listener: () => void) {
+  overrideListeners.add(listener);
+  return () => overrideListeners.delete(listener);
+}
+
+function normalizeOverrideMap(source: unknown): Record<string,string> {
+  const next: Record<string,string> = {};
+  if (!source || typeof source !== 'object') return next;
+
+  for (const name of ICON_NAMES) {
+    const raw = (source as Record<string,unknown>)[name];
+    if (typeof raw !== 'string' || !raw.trim()) continue;
+    if (!sanitizeCustomSvg(raw)) continue;
+    next[name] = raw.trim();
   }
+  return next;
 }
 
 export function getAllIconOverrides(): Record<string,string> {
-  return readOverrides();
+  return { ...runtimeOverrides };
 }
 
 export function getIconOverride(name: AppIconName): string {
-  return readOverrides()[name] || '';
+  return runtimeOverrides[name] || '';
+}
+
+export function replaceIconOverrides(source: unknown): Record<string,string> {
+  runtimeOverrides = normalizeOverrideMap(source);
+  try {
+    localStorage.removeItem(LEGACY_ICON_OVERRIDE_STORAGE_KEY);
+  } catch {
+    // A configuração local antiga é ignorada de propósito.
+  }
+  notifyOverrideListeners();
+  return getAllIconOverrides();
 }
 
 export function setIconOverride(name: AppIconName, rawSvg: string) {
-  const next = readOverrides();
   const clean = sanitizeCustomSvg(rawSvg);
   if (!clean) throw new Error('SVG inválido');
-  next[name] = rawSvg.trim();
-  localStorage.setItem(ICON_OVERRIDE_STORAGE_KEY, JSON.stringify(next));
+  runtimeOverrides = { ...runtimeOverrides, [name]: rawSvg.trim() };
+  notifyOverrideListeners();
 }
 
 export function resetIconOverride(name: AppIconName) {
-  const next = readOverrides();
+  const next = { ...runtimeOverrides };
   delete next[name];
-  localStorage.setItem(ICON_OVERRIDE_STORAGE_KEY, JSON.stringify(next));
+  runtimeOverrides = next;
+  notifyOverrideListeners();
+}
+
+export async function loadGlobalIconOverrides(): Promise<Record<string,string>> {
+  const response = await fetch('/api/icon-overrides', {
+    method: 'GET',
+    headers: { Accept: 'application/json' },
+    cache: 'no-store',
+  });
+
+  if (!response.ok) {
+    throw new Error(`Falha ao carregar ícones globais (HTTP ${response.status})`);
+  }
+
+  const payload = await response.json();
+  return replaceIconOverrides(payload?.overrides || {});
+}
+
+export async function saveGlobalIconOverrides(source: Record<string,string>): Promise<Record<string,string>> {
+  const overrides = normalizeOverrideMap(source);
+
+  const response = await fetch('/api/icon-overrides', {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+    body: JSON.stringify({ overrides }),
+  });
+
+  if (!response.ok) {
+    const payload = await response.json().catch(() => ({}));
+    throw new Error(payload?.error || `Falha ao salvar ícones globais (HTTP ${response.status})`);
+  }
+
+  const payload = await response.json();
+  return replaceIconOverrides(payload?.overrides || overrides);
 }
 
 export function sanitizeCustomSvg(raw: string): string {
@@ -139,7 +200,7 @@ export function sanitizeCustomSvg(raw: string): string {
     svg.innerHTML = onlySymbol.innerHTML;
   }
 
-  svg.querySelectorAll('script,foreignObject,iframe,object,embed').forEach((node) => node.remove());
+  svg.querySelectorAll('script,style,foreignObject,iframe,object,embed').forEach((node) => node.remove());
 
   svg.querySelectorAll('*').forEach((el) => {
     Array.from(el.attributes).forEach((attr) => {
@@ -181,6 +242,11 @@ function createAppIcon(name: AppIconName): React.FC<IconProps> {
   const Native = (Lucide as unknown as Record<string, React.ComponentType<any>>)[name];
 
   const AppIcon: React.FC<IconProps> = (props) => {
+    React.useSyncExternalStore(
+      subscribeToOverrides,
+      () => overrideRevision,
+      () => overrideRevision
+    );
     const override = getIconOverride(name);
     const {
       strokeWidth: _ignoredStrokeWidth,

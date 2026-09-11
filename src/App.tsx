@@ -13,7 +13,7 @@ import { ContactDetailModal } from './components/ContactDetailModal';
 import { LogInteractionModal } from './components/LogInteractionModal';
 import { ScheduleMeetModal } from './components/ScheduleMeetModal';
 import { ImportContactsModal } from './components/ImportContactsModal';
-import { Bell, Sparkles, Heart } from './icons';
+import { Bell, Sparkles, Heart, loadGlobalIconOverrides } from './icons';
 
 const STORAGE_KEY = 'social_sync_contacts_v1';
 
@@ -42,6 +42,13 @@ export default function App() {
       console.error('Erro ao salvar no localStorage:', e);
     }
   }, [contacts]);
+
+  // Carrega a configuração global de ícones do servidor.
+  useEffect(() => {
+    loadGlobalIconOverrides().catch((error) => {
+      console.warn('Não foi possível carregar os ícones globais; usando os padrões:', error);
+    });
+  }, []);
 
   // 2. Navegação por abas
   const [currentTab, setCurrentTab] = useState<TabType>('painel');

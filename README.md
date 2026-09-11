@@ -4,7 +4,7 @@ PWA de monitoramento de interações sociais.
 
 ## Versão atual
 
-**v1.1.1**
+**v1.2.0**
 
 ## Execução
 
@@ -17,6 +17,8 @@ O servidor usa automaticamente a variável `PORT` fornecida pela hospedagem.
 ## Persistência dos dados
 
 A sincronização em nuvem usa o arquivo `cloud_vault.json`.
+
+A configuração global do editor de ícones usa `icon_overrides.json` no mesmo diretório persistente. O app não importa as escolhas antigas de ícones salvas no `localStorage`.
 
 - Localmente, ele é salvo em `data/`.
 - Na Railway, se um Volume estiver conectado, o app usa automaticamente `RAILWAY_VOLUME_MOUNT_PATH`.
