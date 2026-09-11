@@ -18,7 +18,7 @@ import {
   ChevronRight,
   MessageSquare,
   Lightbulb
-} from 'lucide-react';
+} from '../icons';
 
 interface ContactDetailModalProps {
   contact: Contact | null;
