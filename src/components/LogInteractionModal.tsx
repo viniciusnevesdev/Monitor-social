@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Contact, InteractionChannel } from '../types';
 import { CHANNEL_CONFIG } from '../utils/calculations';
-import { X, Calendar, Star, MessageCircle, Phone, Users, Coffee, Video, Mail, Check, Lightbulb } from 'lucide-react';
+import { X, Calendar, Star, MessageCircle, Phone, Users, Coffee, Video, Mail, Check, Lightbulb } from '../icons';
 
 interface LogInteractionModalProps {
   isOpen: boolean;
