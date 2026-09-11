@@ -4,12 +4,12 @@ import fs from 'fs';
 import { createServer as createViteServer } from 'vite';
 
 const app = express();
-const PORT = 3000;
+const PORT = Number(process.env.PORT) || 3000;
 
 app.use(express.json({ limit: '10mb' }));
 
 // Diretório para armazenamento local do cofre de sincronização em nuvem
-const DATA_DIR = path.resolve('data');
+const DATA_DIR = process.env.RAILWAY_VOLUME_MOUNT_PATH\n  ? path.resolve(process.env.RAILWAY_VOLUME_MOUNT_PATH)\n  : path.resolve('data');
 const SYNC_FILE = path.join(DATA_DIR, 'cloud_vault.json');
 
 if (!fs.existsSync(DATA_DIR)) {
@@ -108,7 +108,7 @@ async function startServer() {
   }
 
   app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Server running on http://localhost:${PORT}`);
+    console.log(`Server running on port ${PORT}`);\n    console.log(`Persistent data directory: ${DATA_DIR}`);
   });
 }
 
