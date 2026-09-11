@@ -10,7 +10,7 @@ import {
   CheckCircle2,
   Users,
   AlertCircle
-} from 'lucide-react';
+} from '../icons';
 
 interface ImportContactsModalProps {
   isOpen: boolean;
