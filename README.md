@@ -1,8 +1,15 @@
-# Monitor Social
+# Laços
 
 PWA de monitoramento de interações sociais.
 
 ## Versão atual
+
+**v1.3.2**
+
+- Aplicativo renomeado oficialmente de SocialSync para **Laços**.
+- Nome atualizado no cabeçalho, metadados do PWA, manifesto e instalação na tela inicial.
+- Arquivos de backup exportados agora usam o prefixo `lacos-backup`.
+- Chaves internas `social_sync_*` foram preservadas para manter compatibilidade com dados já salvos.
 
 **v1.3.1**
 
