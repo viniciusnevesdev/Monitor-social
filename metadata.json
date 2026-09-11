@@ -1,0 +1,6 @@
+{
+  "name": "Monitor de Interações Sociais",
+  "description": "PWA para monitorar conexões, avaliar intimidade, importância e bem-estar, com lembretes automáticos e painel de priorização de contatos negligenciados.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
