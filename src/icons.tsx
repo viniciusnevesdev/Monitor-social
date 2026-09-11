@@ -93,12 +93,34 @@ export async function loadGlobalIconOverrides(): Promise<Record<string,string>> 
   return replaceIconOverrides(payload?.overrides || {});
 }
 
-export async function saveGlobalIconOverrides(source: Record<string,string>): Promise<Record<string,string>> {
+export async function verifyIconEditorKey(editorKey: string): Promise<void> {
+  const response = await fetch('/api/icon-overrides/verify', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'X-Icon-Editor-Key': editorKey,
+    },
+  });
+
+  if (!response.ok) {
+    const payload = await response.json().catch(() => ({}));
+    throw new Error(payload?.error || 'Não foi possível desbloquear o editor.');
+  }
+}
+
+export async function saveGlobalIconOverrides(
+  source: Record<string,string>,
+  editorKey: string
+): Promise<Record<string,string>> {
   const overrides = normalizeOverrideMap(source);
 
   const response = await fetch('/api/icon-overrides', {
     method: 'PUT',
-    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      'X-Icon-Editor-Key': editorKey,
+    },
     body: JSON.stringify({ overrides }),
   });
 
