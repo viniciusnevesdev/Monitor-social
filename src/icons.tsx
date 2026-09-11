@@ -51,34 +51,120 @@ export function resetIconOverride(name: AppIconName) {
 }
 
 export function sanitizeCustomSvg(raw: string): string {
-  const source = String(raw || '').trim();
-  if (!source || typeof DOMParser === 'undefined') return '';
+  if (typeof DOMParser === 'undefined') return '';
 
-  const wrapped = /^<svg\b/i.test(source)
+  let source = String(raw || '')
+    .trim()
+    .replace(/^\`\`\`(?:svg|xml|html|jsx|tsx)?\s*/i, '')
+    .replace(/\s*\`\`\`$/i, '')
+    .trim();
+
+  if (!source) return '';
+
+  // Aceita documentos SVG completos mesmo quando vêm com cabeçalho XML,
+  // DOCTYPE, comentários ou algum texto explicativo antes/depois do SVG.
+  source = source
+    .replace(/<\?xml[\s\S]*?\?>/gi, '')
+    .replace(/<!DOCTYPE[\s\S]*?>/gi, '')
+    .trim();
+
+  const svgStart = source.search(/<svg\b/i);
+  if (svgStart >= 0) {
+    const svgEndMatch = source.match(/<\/svg\s*>/gi);
+    if (svgEndMatch?.length) {
+      const lastClose = source.toLowerCase().lastIndexOf('</svg>');
+      source = source.slice(svgStart, lastClose + 6);
+    } else {
+      source = source.slice(svgStart);
+    }
+  }
+
+  // Normaliza atributos comuns de JSX/React para atributos SVG reais.
+  source = source
+    .replace(/\bclassName\s*=/g, 'class=')
+    .replace(/\bstrokeWidth\s*=/g, 'stroke-width=')
+    .replace(/\bstrokeLinecap\s*=/g, 'stroke-linecap=')
+    .replace(/\bstrokeLinejoin\s*=/g, 'stroke-linejoin=')
+    .replace(/\bstrokeMiterlimit\s*=/g, 'stroke-miterlimit=')
+    .replace(/\bfillRule\s*=/g, 'fill-rule=')
+    .replace(/\bclipRule\s*=/g, 'clip-rule=')
+    .replace(/\bfillOpacity\s*=/g, 'fill-opacity=')
+    .replace(/\bstrokeOpacity\s*=/g, 'stroke-opacity=')
+    .replace(/\bstrokeDasharray\s*=/g, 'stroke-dasharray=')
+    .replace(/\bstrokeDashoffset\s*=/g, 'stroke-dashoffset=')
+    .replace(/\btabIndex\s*=/g, 'tabindex=')
+    .replace(/\{\s*['"]([^'"]+)['"]\s*\}/g, '"$1"')
+    .replace(/\{\s*([0-9.]+)\s*\}/g, '"$1"');
+
+  // Entidades HTML comuns não existem no parser XML puro.
+  source = source
+    .replace(/&nbsp;/gi, '&#160;')
+    .replace(/&copy;/gi, '&#169;')
+    .replace(/&reg;/gi, '&#174;');
+
+  const isFullSvg = /^\s*<svg\b/i.test(source);
+  const wrapped = isFullSvg
     ? source
-    : `<svg viewBox="0 0 24 24" fill="currentColor" stroke="none">${source}</svg>`;
+    : `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="none">${source}</svg>`;
 
-  const doc = new DOMParser().parseFromString(wrapped, 'image/svg+xml');
-  const svg = doc.documentElement;
-  if (!svg || svg.nodeName.toLowerCase() !== 'svg' || doc.querySelector('parsererror')) return '';
+  let doc = new DOMParser().parseFromString(wrapped, 'image/svg+xml');
+  let svg = doc.documentElement;
 
-  svg.querySelectorAll('script,foreignObject,style,iframe,object,embed').forEach((node) => node.remove());
+  // Fallback tolerante para snippets que o parser XML rejeita mas o navegador
+  // consegue interpretar como HTML/SVG válido.
+  if (!svg || svg.nodeName.toLowerCase() !== 'svg' || doc.querySelector('parsererror')) {
+    const htmlDoc = new DOMParser().parseFromString(
+      isFullSvg ? wrapped : `<body>${wrapped}</body>`,
+      'text/html'
+    );
+    const htmlSvg = htmlDoc.querySelector('svg');
+    if (!htmlSvg) return '';
+
+    const serialized = htmlSvg.outerHTML;
+    doc = new DOMParser().parseFromString(serialized, 'image/svg+xml');
+    svg = doc.documentElement;
+
+    if (!svg || svg.nodeName.toLowerCase() !== 'svg' || doc.querySelector('parsererror')) {
+      return '';
+    }
+  }
+
+  // Se foi colado apenas um <symbol>, transforma o conteúdo em SVG visível.
+  const onlySymbol = svg.children.length === 1 && svg.firstElementChild?.tagName.toLowerCase() === 'symbol'
+    ? svg.firstElementChild
+    : null;
+  if (onlySymbol) {
+    const symbolViewBox = onlySymbol.getAttribute('viewBox');
+    if (symbolViewBox && !svg.getAttribute('viewBox')) svg.setAttribute('viewBox', symbolViewBox);
+    svg.innerHTML = onlySymbol.innerHTML;
+  }
+
+  svg.querySelectorAll('script,foreignObject,iframe,object,embed').forEach((node) => node.remove());
+
   svg.querySelectorAll('*').forEach((el) => {
     Array.from(el.attributes).forEach((attr) => {
       const name = attr.name.toLowerCase();
       const value = attr.value.trim();
-      if (name.startsWith('on')) el.removeAttribute(attr.name);
-      if (name === 'style') el.removeAttribute(attr.name);
-      if ((name === 'href' || name === 'xlink:href') && /^(?:https?:|data:|javascript:)/i.test(value)) {
+
+      if (name.startsWith('on')) {
         el.removeAttribute(attr.name);
+        return;
+      }
+
+      if ((name === 'href' || name === 'xlink:href')) {
+        // Referências internas como #gradient e #mask continuam permitidas.
+        if (/^(?:https?:|data:|javascript:)/i.test(value)) el.removeAttribute(attr.name);
       }
     });
   });
 
   Array.from(svg.attributes).forEach((attr) => {
-    const name = attr.name.toLowerCase();
-    if (name.startsWith('on') || name === 'style') svg.removeAttribute(attr.name);
+    if (attr.name.toLowerCase().startsWith('on')) svg.removeAttribute(attr.name);
   });
+
+  if (!svg.getAttribute('xmlns')) {
+    svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+  }
 
   return svg.outerHTML;
 }
