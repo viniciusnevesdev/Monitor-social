@@ -4,7 +4,7 @@ PWA de monitoramento de interações sociais.
 
 ## Versão atual
 
-**v1.2.0**
+**v1.3.0**
 
 ## Execução
 
@@ -19,6 +19,10 @@ O servidor usa automaticamente a variável `PORT` fornecida pela hospedagem.
 A sincronização em nuvem usa o arquivo `cloud_vault.json`.
 
 A configuração global do editor de ícones usa `icon_overrides.json` no mesmo diretório persistente. O app não importa as escolhas antigas de ícones salvas no `localStorage`.
+
+O editor global exige a variável `ICON_EDITOR_KEY` para qualquer alteração. A leitura dos ícones permanece pública para que todos os aparelhos exibam a mesma configuração.
+
+Na primeira inicialização da v1.3.0, a configuração final da v1.2.0 é copiada para `icon-backups/icon_overrides-v1.2.0-final.json` dentro do volume persistente.
 
 - Localmente, ele é salvo em `data/`.
 - Na Railway, se um Volume estiver conectado, o app usa automaticamente `RAILWAY_VOLUME_MOUNT_PATH`.
