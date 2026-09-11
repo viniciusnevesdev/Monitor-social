@@ -4,7 +4,9 @@ import fs from 'fs';
 import { createServer as createViteServer } from 'vite';
 
 const app = express();
+const APP_VERSION = '1.0.0';
 const PORT = Number(process.env.PORT) || 3000;
+const IS_PRODUCTION = process.env.NODE_ENV === 'production' || Boolean(process.env.RAILWAY_ENVIRONMENT_NAME);
 
 app.use(express.json({ limit: '10mb' }));
 
@@ -38,7 +40,7 @@ function writeCloudVault(vault: Record<string, { contacts: any[]; updatedAt: str
 
 // 1. Health check
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', serverTime: new Date().toISOString() });
+  res.json({ status: 'ok', version: APP_VERSION, serverTime: new Date().toISOString() });
 });
 
 // 2. Buscar dados da nuvem pelo código de sincronização
@@ -93,7 +95,7 @@ app.post('/api/sync/:syncKey', (req, res) => {
 
 async function startServer() {
   // Vite middleware for development
-  if (process.env.NODE_ENV !== 'production') {
+  if (!IS_PRODUCTION) {
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: 'spa',
@@ -108,7 +110,7 @@ async function startServer() {
   }
 
   app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Server running on port ${PORT}`);\n    console.log(`Persistent data directory: ${DATA_DIR}`);
+    console.log(`Server v${APP_VERSION} running on port ${PORT}`);\n    console.log(`Persistent data directory: ${DATA_DIR}`);
   });
 }
 
