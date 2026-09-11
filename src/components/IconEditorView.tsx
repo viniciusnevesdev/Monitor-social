@@ -9,12 +9,15 @@ import {
   sanitizeCustomSvg,
   saveGlobalIconOverrides,
   setIconOverride,
+  verifyIconEditorKey,
 } from '../icons';
 import { APP_VERSION } from '../version';
 
 interface IconEditorViewProps {
   onClose: () => void;
 }
+
+const ICON_EDITOR_SESSION_KEY = 'monitor_social_icon_editor_session_key_v1';
 
 function labelFor(name: string) {
   return name.replace(/([a-z0-9])([A-Z])/g, '$1 $2');
@@ -28,6 +31,10 @@ export const IconEditorView: React.FC<IconEditorViewProps> = ({ onClose }) => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [dirty, setDirty] = useState(false);
+  const [editorKey, setEditorKey] = useState('');
+  const [authenticated, setAuthenticated] = useState(false);
+  const [authMessage, setAuthMessage] = useState('');
+  const [authLoading, setAuthLoading] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -51,6 +58,48 @@ export const IconEditorView: React.FC<IconEditorViewProps> = ({ onClose }) => {
       active = false;
     };
   }, []);
+
+  useEffect(() => {
+    const savedKey = sessionStorage.getItem(ICON_EDITOR_SESSION_KEY) || '';
+    if (!savedKey) return;
+
+    setEditorKey(savedKey);
+    verifyIconEditorKey(savedKey)
+      .then(() => setAuthenticated(true))
+      .catch(() => {
+        sessionStorage.removeItem(ICON_EDITOR_SESSION_KEY);
+        setEditorKey('');
+      });
+  }, []);
+
+  const unlockEditor = async () => {
+    const key = editorKey.trim();
+    if (!key) {
+      setAuthMessage('Digite a chave do editor.');
+      return;
+    }
+
+    setAuthLoading(true);
+    setAuthMessage('Verificando chave…');
+    try {
+      await verifyIconEditorKey(key);
+      sessionStorage.setItem(ICON_EDITOR_SESSION_KEY, key);
+      setAuthenticated(true);
+      setAuthMessage('');
+    } catch (error) {
+      setAuthenticated(false);
+      setAuthMessage(error instanceof Error ? error.message : 'Não foi possível desbloquear o editor.');
+    } finally {
+      setAuthLoading(false);
+    }
+  };
+
+  const lockEditor = () => {
+    sessionStorage.removeItem(ICON_EDITOR_SESSION_KEY);
+    setAuthenticated(false);
+    setEditorKey('');
+    setAuthMessage('');
+  };
 
   const visibleIcons = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -103,7 +152,7 @@ export const IconEditorView: React.FC<IconEditorViewProps> = ({ onClose }) => {
     setSaving(true);
     setMessage('Salvando os ícones para todos os aparelhos…');
     try {
-      const saved = await saveGlobalIconOverrides(next);
+      const saved = await saveGlobalIconOverrides(next, editorKey);
       setOverrides(saved);
       setDrafts({ ...saved });
       setDirty(false);
@@ -127,6 +176,66 @@ export const IconEditorView: React.FC<IconEditorViewProps> = ({ onClose }) => {
     }
   };
 
+  if (!authenticated) {
+    return (
+      <div className="min-h-screen bg-slate-950 text-slate-100 flex items-center justify-center px-4">
+        <div className="w-full max-w-md rounded-3xl border border-white/10 bg-white/[0.035] p-5 shadow-2xl">
+          <button
+            type="button"
+            onClick={onClose}
+            className="text-xs font-semibold text-indigo-300 hover:text-indigo-200"
+          >
+            ← Voltar ao app
+          </button>
+
+          <div className="mt-5">
+            <div className="flex items-center gap-2">
+              <h1 className="text-xl font-bold">Editor protegido</h1>
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-500/15 text-indigo-200 border border-indigo-400/20">
+                v{APP_VERSION}
+              </span>
+            </div>
+            <p className="text-sm text-slate-400 mt-2 leading-relaxed">
+              Os ícones continuam públicos no aplicativo, mas alterações globais exigem a chave de administrador.
+            </p>
+          </div>
+
+          <label className="block mt-5 text-xs font-bold text-slate-300">Chave do editor</label>
+          <input
+            type="password"
+            value={editorKey}
+            onChange={(e) => setEditorKey(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') unlockEditor();
+            }}
+            autoComplete="current-password"
+            placeholder="Digite ou cole a chave"
+            className="mt-2 w-full rounded-xl border border-white/10 bg-black/20 px-3 py-3 text-sm text-white placeholder:text-slate-600 outline-none focus:border-indigo-400/50"
+          />
+
+          {authMessage && (
+            <div className="mt-3 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs text-slate-300">
+              {authMessage}
+            </div>
+          )}
+
+          <button
+            type="button"
+            onClick={unlockEditor}
+            disabled={authLoading}
+            className="mt-4 w-full rounded-xl bg-indigo-600 px-4 py-3 text-sm font-extrabold text-white disabled:opacity-50"
+          >
+            {authLoading ? 'Verificando…' : 'Desbloquear editor'}
+          </button>
+
+          <p className="mt-3 text-[10px] text-slate-500 leading-relaxed">
+            A chave fica guardada apenas nesta sessão do navegador. Fechar a sessão ou usar “Bloquear editor” exige autenticação novamente.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100">
       <header className="sticky top-0 z-30 border-b border-white/10 bg-slate-950/90 backdrop-blur-xl">
@@ -149,12 +258,21 @@ export const IconEditorView: React.FC<IconEditorViewProps> = ({ onClose }) => {
               {ICON_NAMES.length} ícones usados no aplicativo. Aceita SVG completo, fragmentos, XML e códigos JSX/React. Stroke continua stroke; fill continua fill.
             </p>
           </div>
-          <input
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Buscar ícone…"
-            className="w-full sm:w-64 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-slate-500 outline-none focus:border-indigo-400/50"
-          />
+          <div className="flex gap-2 w-full sm:w-auto">
+            <input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Buscar ícone…"
+              className="min-w-0 flex-1 sm:w-64 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-slate-500 outline-none focus:border-indigo-400/50"
+            />
+            <button
+              type="button"
+              onClick={lockEditor}
+              className="shrink-0 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs font-bold text-slate-300"
+            >
+              Bloquear editor
+            </button>
+          </div>
         </div>
       </header>
 
@@ -242,7 +360,7 @@ export const IconEditorView: React.FC<IconEditorViewProps> = ({ onClose }) => {
               {dirty ? 'Alterações ainda não publicadas' : 'Configuração global sincronizada'}
             </div>
             <div className="text-[10px] text-slate-500 mt-0.5">
-              O salvamento substitui a configuração global em todos os aparelhos. Escolhas antigas do localStorage não são importadas.
+              O salvamento substitui a configuração global em todos os aparelhos. Backup final da v1.2.0 preservado no volume da Railway.
             </div>
           </div>
           <button
