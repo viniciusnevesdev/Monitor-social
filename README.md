@@ -4,7 +4,7 @@ PWA de monitoramento de interações sociais.
 
 ## Versão atual
 
-**v1.0.0**
+**v1.0.1**
 
 ## Execução
 
