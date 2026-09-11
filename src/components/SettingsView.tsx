@@ -23,9 +23,9 @@ import {
   MessageSquareQuote,
   BellRing,
   Lightbulb
-} from 'lucide-react';
+} from '../icons';
 
-const APP_VERSION = '1.0.1';
+import { APP_VERSION } from '../version';
 
 const SUGGESTIONS_LIST = [
   {
@@ -256,6 +256,14 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
         <p className="text-sm text-slate-500 mt-0.5">
           Gerencie a instalação no seu dispositivo, faça cópias de segurança e entenda a lógica de pontuação.
         </p>
+        <button
+          type="button"
+          onClick={() => { window.location.hash = 'icon-editor'; }}
+          className="mt-3 w-full sm:w-auto inline-flex items-center gap-2 rounded-xl border border-indigo-200 bg-indigo-50 px-3 py-2 text-xs font-bold text-indigo-700 hover:bg-indigo-100 transition-colors"
+        >
+          <Sparkles className="w-4 h-4" />
+          Abrir editor de ícones
+        </button>
       </div>
 
       {/* PWA Card */}
