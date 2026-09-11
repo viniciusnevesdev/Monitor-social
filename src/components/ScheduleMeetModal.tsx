@@ -12,7 +12,7 @@ import {
   Download,
   ExternalLink,
   Check
-} from 'lucide-react';
+} from '../icons';
 
 interface ScheduleMeetModalProps {
   contact: Contact | null;
