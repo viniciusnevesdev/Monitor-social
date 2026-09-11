@@ -87,7 +87,7 @@ export const IconEditorView: React.FC<IconEditorViewProps> = ({ onClose }) => {
               </span>
             </div>
             <p className="text-xs text-slate-400 mt-1">
-              {ICON_NAMES.length} ícones usados no aplicativo. SVG stroke continua stroke; SVG fill continua fill.
+              {ICON_NAMES.length} ícones usados no aplicativo. Aceita SVG completo, fragmentos, XML e códigos JSX/React. Stroke continua stroke; fill continua fill.
             </p>
           </div>
           <input
@@ -101,7 +101,7 @@ export const IconEditorView: React.FC<IconEditorViewProps> = ({ onClose }) => {
 
       <main className="max-w-6xl mx-auto px-4 py-5 pb-24">
         <div className="mb-4 rounded-2xl border border-indigo-400/15 bg-indigo-500/8 px-4 py-3 text-xs text-slate-300 leading-relaxed">
-          Não existe controle de peso, espessura ou contorno. O editor preserva a geometria do SVG que você colar e o app só herda a cor necessária ao contexto quando o SVG usa <code className="text-indigo-200">currentColor</code>.
+          Não existe controle de peso, espessura ou contorno. Você pode colar um SVG completo, um fragmento como <path>, código com cabeçalho XML ou SVG copiado de JSX/React. O editor normaliza apenas o formato técnico e preserva a geometria visual.
         </div>
 
         {message && (
