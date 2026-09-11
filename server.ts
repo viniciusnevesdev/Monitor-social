@@ -129,7 +129,7 @@ app.get('/api/icon-overrides', (req, res) => {
 
 app.put('/api/icon-overrides', (req, res) => {
   const validation = validateIconOverrides(req.body?.overrides);
-  if (!validation.ok) {
+  if ('error' in validation) {
     return res.status(400).json({ error: validation.error });
   }
 
