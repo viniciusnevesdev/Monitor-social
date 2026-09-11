@@ -1,10 +1,10 @@
-# Monitor Social
+# Monitor Social — Beta
 
-PWA de monitoramento de interações sociais.
+PWA de monitoramento de interações sociais. Esta branch é destinada a testes e não deve compartilhar armazenamento com a versão oficial.
 
 ## Versão atual
 
-**v1.3.0**
+**v1.4.0-beta.1**
 
 ## Execução
 
