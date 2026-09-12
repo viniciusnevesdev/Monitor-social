@@ -1,8 +1,14 @@
-# Monitor Social — Beta
+# Laços — Beta
 
 PWA de monitoramento de interações sociais. Esta branch é destinada a testes e não deve compartilhar armazenamento com a versão oficial.
 
 ## Versão atual
+
+**v1.4.0-beta.4**
+
+- Beta sincronizada com a versão oficial **Laços v1.3.2**.
+- Nome, interface, manifesto, PWA e comportamento funcional alinhados com a oficial.
+- Mantidos apenas os identificadores próprios da Beta: selo BETA, ícone beta, branch/serviço separados e numeração beta.
 
 **v1.4.0-beta.3**
 
