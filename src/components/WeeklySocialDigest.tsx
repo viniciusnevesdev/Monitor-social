@@ -53,21 +53,21 @@ export const WeeklySocialDigest: React.FC<WeeklySocialDigestProps> = ({
     .slice(0, 3);
 
   return (
-    <div className="bg-gradient-to-br from-indigo-950 via-slate-900 to-indigo-900 rounded-3xl p-5 sm:p-7 text-white shadow-xl relative overflow-hidden space-y-5">
+    <div className="bg-gradient-to-br from-indigo-950 via-slate-900 to-indigo-900 rounded-3xl p-4 sm:p-5 text-white shadow-xl relative overflow-hidden space-y-4">
       {/* Decorative ambient blur */}
       <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
 
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <span className="p-2 rounded-xl bg-white/10 backdrop-blur-md border border-white/15">
-            <Sparkles className="w-5 h-5 text-amber-300" />
+          <span className="p-1.5 rounded-xl bg-white/10 backdrop-blur-md border border-white/15">
+            <Sparkles className="w-4.5 h-4.5 text-amber-300" />
           </span>
           <div>
             <span className="text-[11px] uppercase font-bold text-indigo-300 tracking-wider">
               Resumo Semanal de Conexões
             </span>
-            <h3 className="text-xl font-bold text-white tracking-tight">
+            <h3 className="text-lg font-bold text-white tracking-tight leading-tight">
               Social Digest dos Últimos 7 Dias
             </h3>
           </div>
@@ -81,7 +81,7 @@ export const WeeklySocialDigest: React.FC<WeeklySocialDigestProps> = ({
 
       {/* Progress & Highlights Row */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-        <div className="p-3.5 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15">
+        <div className="p-3 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15">
           <span className="text-indigo-200 block text-[11px]">Saúde da Rede Social</span>
           <div className="flex items-center gap-2 mt-1">
             <span className="text-xl font-bold text-white">{healthPercentage}%</span>
@@ -91,7 +91,7 @@ export const WeeklySocialDigest: React.FC<WeeklySocialDigestProps> = ({
           </div>
         </div>
 
-        <div className="p-3.5 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15">
+        <div className="p-3 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15">
           <span className="text-indigo-200 block text-[11px]">Meta de Interações</span>
           <div className="flex items-center gap-2 mt-1">
             <span className="text-xl font-bold text-white">
@@ -101,7 +101,7 @@ export const WeeklySocialDigest: React.FC<WeeklySocialDigestProps> = ({
           </div>
         </div>
 
-        <div className="p-3.5 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15">
+        <div className="p-3 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15">
           <span className="text-indigo-200 block text-[11px]">Foco Recomendado</span>
           <span className="font-bold text-white text-sm block mt-1">
             {topPriorityThisWeek[0]?.contact.name.split(' ')[0] || 'Tudo em dia'}
@@ -111,12 +111,12 @@ export const WeeklySocialDigest: React.FC<WeeklySocialDigestProps> = ({
       </div>
 
       {/* Plano de Ação Semanal: 3 Pessoas Críticas com Gancho Contextual */}
-      <div className="space-y-2 pt-1">
+      <div className="space-y-1.5 pt-0.5">
         <span className="text-xs font-bold text-indigo-200 block">
           Plano de Conexões Recomendadas para Esta Semana:
         </span>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5">
           {topPriorityThisWeek.map(({ contact, scores }) => {
             // Último gancho de conversa salvo na memória social
             const latestInteraction = (contact.interactions || [])[0];
@@ -125,7 +125,7 @@ export const WeeklySocialDigest: React.FC<WeeklySocialDigestProps> = ({
             return (
               <div
                 key={contact.id}
-                className="bg-white/10 backdrop-blur-md rounded-2xl p-3.5 border border-white/15 flex flex-col justify-between hover:bg-white/15 transition-all"
+                className="bg-white/10 backdrop-blur-md rounded-2xl p-3 border border-white/15 flex flex-col justify-between hover:bg-white/15 transition-all"
               >
                 <div>
                   <div className="flex items-center justify-between gap-2">
@@ -170,7 +170,7 @@ export const WeeklySocialDigest: React.FC<WeeklySocialDigestProps> = ({
                   )}
                 </div>
 
-                <div className="mt-3 pt-2 border-t border-white/10 flex items-center justify-between">
+                <div className="mt-2.5 pt-2 border-t border-white/10 flex items-center justify-between">
                   <button
                     onClick={() => onOpenLogModal(contact.id)}
                     className="text-[11px] text-cyan-300 hover:text-cyan-200 font-bold flex items-center gap-1"
