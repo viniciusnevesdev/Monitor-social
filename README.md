@@ -4,6 +4,15 @@ PWA de monitoramento de interações sociais. Esta branch é destinada a testes 
 
 ## Versão atual
 
+**v1.4.0-beta.5**
+
+- Adiciona temas **Claro**, **Escuro** e **Automático**, com o Automático seguindo o tema do sistema.
+- Aumenta o nome **Laços** no cabeçalho para equilibrar com o ícone.
+- Compacta a barra inferior e aumenta o contraste dos ícones.
+- Centraliza título e subtítulo da janela **Registrar Conversa** e move o fechar para o canto superior esquerdo com contraste adaptado ao tema.
+- Compacta o cartão principal do Painel e centraliza o botão **Registrar Conversa**.
+- Compacta o **Resumo Semanal de Conexões** sem remover informações.
+
 **v1.4.0-beta.4**
 
 - Beta sincronizada com a versão oficial **Laços v1.3.2**.
