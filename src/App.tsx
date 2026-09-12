@@ -16,8 +16,36 @@ import { ImportContactsModal } from './components/ImportContactsModal';
 import { Bell, Sparkles, Heart, loadGlobalIconOverrides } from './icons';
 
 const STORAGE_KEY = 'social_sync_contacts_v1';
+const THEME_KEY = 'lacos_theme_preference';
+export type ThemePreference = 'light' | 'dark' | 'system';
 
 export default function App() {
+  const [themePreference, setThemePreference] = useState<ThemePreference>(() => {
+    const saved = localStorage.getItem(THEME_KEY);
+    return saved === 'light' || saved === 'dark' || saved === 'system' ? saved : 'system';
+  });
+
+  useEffect(() => {
+    const media = window.matchMedia('(prefers-color-scheme: dark)');
+
+    const applyTheme = () => {
+      const resolvedTheme = themePreference === 'system'
+        ? (media.matches ? 'dark' : 'light')
+        : themePreference;
+
+      document.documentElement.dataset.theme = resolvedTheme;
+      document.documentElement.style.colorScheme = resolvedTheme;
+      localStorage.setItem(THEME_KEY, themePreference);
+
+      const themeMeta = document.querySelector('meta[name="theme-color"]');
+      themeMeta?.setAttribute('content', resolvedTheme === 'dark' ? '#020617' : '#f8fafc');
+    };
+
+    applyTheme();
+    media.addEventListener?.('change', applyTheme);
+    return () => media.removeEventListener?.('change', applyTheme);
+  }, [themePreference]);
+
   // 1. Estado dos Contatos com persistência em localStorage
   const [contacts, setContacts] = useState<Contact[]>(() => {
     try {
@@ -286,16 +314,16 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col antialiased">
+    <div className="app-shell min-h-screen bg-slate-50 text-slate-900 flex flex-col antialiased">
       {/* Top Navbar */}
-      <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-xl border-b border-slate-200/70 py-3 px-4 sm:px-6">
+      <header className="app-header sticky top-0 z-30 bg-white/80 backdrop-blur-xl border-b border-slate-200/70 py-2.5 px-4 sm:px-6">
         <div className="max-w-5xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-600 to-indigo-700 flex items-center justify-center text-white shadow-md shadow-indigo-600/20">
               <Heart className="w-5 h-5 fill-white/20" />
             </div>
             <div>
-              <span className="text-base font-extrabold tracking-tight bg-gradient-to-r from-indigo-700 via-indigo-600 to-cyan-600 bg-clip-text text-transparent">
+              <span className="app-name text-[22px] leading-none font-extrabold tracking-tight bg-gradient-to-r from-indigo-700 via-indigo-600 to-cyan-600 bg-clip-text text-transparent">
                 Laços
               </span>
               <span className="ml-2 inline-flex items-center rounded-full border border-amber-300 bg-amber-50 px-2 py-0.5 text-[9px] font-extrabold tracking-wide text-amber-700">
@@ -373,6 +401,8 @@ export default function App() {
             deferredPrompt={deferredPrompt}
             onInstallPwa={handleInstallPwa}
             isPwaInstalled={isPwaInstalled}
+            themePreference={themePreference}
+            onThemeChange={setThemePreference}
           />
         )}
       </main>
