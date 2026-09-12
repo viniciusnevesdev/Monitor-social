@@ -48,10 +48,10 @@ export const BottomNavBar: React.FC<BottomNavBarProps> = ({
     <nav
       id="apple-capsule-nav"
       aria-label="Navegação Principal"
-      className="fixed bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-40 w-[92%] max-w-md pointer-events-auto select-none"
+      className="fixed bottom-3 sm:bottom-5 left-1/2 -translate-x-1/2 z-40 w-[92%] max-w-md pointer-events-auto select-none"
     >
       {/* Outer Floating Apple-Style Capsule with Glassmorphism */}
-      <div className="relative p-1.5 rounded-full bg-white/80 backdrop-blur-xl border border-white/60 shadow-[0_12px_36px_rgba(15,23,42,0.12)] ring-1 ring-slate-900/5">
+      <div className="bottom-nav-surface relative p-1 rounded-full bg-white/90 backdrop-blur-xl border border-white/70 shadow-[0_10px_28px_rgba(15,23,42,0.13)] ring-1 ring-slate-900/5">
         <ul className="flex items-center justify-between relative">
           {tabs.map((tab) => {
             const Icon = tab.icon;
@@ -63,10 +63,10 @@ export const BottomNavBar: React.FC<BottomNavBarProps> = ({
                   id={`nav-btn-${tab.id}`}
                   onClick={() => onChangeTab(tab.id)}
                   type="button"
-                  className={`group relative flex flex-col items-center justify-center w-full py-2 px-1 transition-all duration-300 rounded-full ${
+                  className={`group relative flex flex-col items-center justify-center w-full py-1.5 px-1 transition-all duration-300 rounded-full ${
                     isActive
-                      ? 'text-indigo-600 font-semibold'
-                      : 'text-slate-500 hover:text-slate-800'
+                      ? 'text-indigo-700 font-semibold'
+                      : 'text-slate-800 hover:text-slate-950'
                   }`}
                 >
                   {/* Apple-style animated bubble behind active item */}
@@ -83,8 +83,8 @@ export const BottomNavBar: React.FC<BottomNavBarProps> = ({
                   <div className="relative">
                     <Icon
                       className={`w-5 h-5 transition-transform duration-200 ${
-                        isActive ? 'scale-110 text-indigo-600' : 'group-hover:scale-105'
-                      } ${tab.isPrimaryAction && !isActive ? 'text-indigo-500' : ''}`}
+                        isActive ? 'scale-105 text-indigo-700' : 'text-slate-800 group-hover:scale-105'
+                      } ${tab.isPrimaryAction && !isActive ? 'text-indigo-700' : ''}`}
                     />
                     
                     {/* Badge for neglected alerts */}
@@ -98,16 +98,12 @@ export const BottomNavBar: React.FC<BottomNavBarProps> = ({
                   {/* Label */}
                   <span
                     className={`text-[11px] mt-0.5 tracking-tight whitespace-nowrap transition-colors duration-200 ${
-                      isActive ? 'text-indigo-600 font-semibold' : 'text-slate-500 font-medium'
+                      isActive ? 'text-indigo-700 font-semibold' : 'text-slate-700 font-medium'
                     }`}
                   >
                     {tab.label}
                   </span>
 
-                  {/* Little Apple dot under active label */}
-                  {isActive && (
-                    <span className="w-1 h-1 mt-0.5 bg-indigo-600 rounded-full" />
-                  )}
                 </button>
               </li>
             );
