@@ -296,7 +296,7 @@ export default function App() {
             </div>
             <div>
               <span className="text-base font-extrabold tracking-tight bg-gradient-to-r from-indigo-700 via-indigo-600 to-cyan-600 bg-clip-text text-transparent">
-                SocialSync
+                Laços
               </span>
               <span className="ml-2 inline-flex items-center rounded-full border border-amber-300 bg-amber-50 px-2 py-0.5 text-[9px] font-extrabold tracking-wide text-amber-700">
                 BETA
