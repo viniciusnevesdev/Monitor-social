@@ -81,22 +81,22 @@ export const NeglectedDashboard: React.FC<NeglectedDashboardProps> = ({
   return (
     <div className="space-y-6 pb-28">
       {/* Header com boas-vindas e síntese do radar social */}
-      <section className="bg-gradient-to-br from-indigo-600 via-indigo-700 to-slate-900 rounded-3xl p-6 sm:p-7 text-white shadow-xl shadow-indigo-500/10 relative overflow-hidden">
+      <section className="bg-gradient-to-br from-indigo-600 via-indigo-700 to-slate-900 rounded-3xl p-4 sm:p-5 text-white shadow-xl shadow-indigo-500/10 relative overflow-hidden">
         {/* Subtle decorative glow */}
         <div className="absolute -top-16 -right-16 w-56 h-56 bg-cyan-400/20 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute -bottom-16 -left-16 w-56 h-56 bg-rose-500/20 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative z-10">
-          <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
+          <div className="flex flex-col gap-3 mb-3">
             <div>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-white/15 backdrop-blur-md border border-white/20 text-indigo-100">
                 <Sparkles className="w-3.5 h-3.5 text-cyan-300" />
                 Painel de Conexões Sociais
               </span>
-              <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white mt-2">
+              <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white mt-1.5">
                 Prioridades de Relacionamento
               </h1>
-              <p className="text-sm text-indigo-100/90 mt-1 max-w-xl">
+              <p className="text-sm text-indigo-100/90 mt-0.5 max-w-xl">
                 Monitore interações, proteja laços essenciais e reconecte-se com pessoas queridas que ficaram sem contato.
               </p>
             </div>
@@ -105,7 +105,7 @@ export const NeglectedDashboard: React.FC<NeglectedDashboardProps> = ({
               id="dashboard-new-log-btn"
               onClick={() => onOpenLogModal()}
               type="button"
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-white text-indigo-700 font-semibold text-sm hover:bg-indigo-50 active:scale-95 transition-all shadow-md shadow-black/10"
+              className="self-center inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-white text-indigo-700 font-semibold text-sm hover:bg-indigo-50 active:scale-95 transition-all shadow-md shadow-black/10"
             >
               <PlusCircle className="w-4 h-4 text-indigo-600" />
               Registrar Conversa
@@ -113,8 +113,8 @@ export const NeglectedDashboard: React.FC<NeglectedDashboardProps> = ({
           </div>
 
           {/* Quick Metrics Bar */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6">
-            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-3.5 border border-white/15">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mt-4">
+            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-3 border border-white/15">
               <div className="flex items-center justify-between">
                 <span className="text-xs text-indigo-200">Negligenciados</span>
                 <AlertOctagon className="w-4 h-4 text-rose-300" />
@@ -125,7 +125,7 @@ export const NeglectedDashboard: React.FC<NeglectedDashboardProps> = ({
               <span className="text-[11px] text-rose-200 font-medium">Requer atenção urgente</span>
             </div>
 
-            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-3.5 border border-white/15">
+            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-3 border border-white/15">
               <div className="flex items-center justify-between">
                 <span className="text-xs text-indigo-200">Em Atenção</span>
                 <Calendar className="w-4 h-4 text-amber-300" />
@@ -136,7 +136,7 @@ export const NeglectedDashboard: React.FC<NeglectedDashboardProps> = ({
               <span className="text-[11px] text-amber-200 font-medium">Prazo de contato próximo</span>
             </div>
 
-            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-3.5 border border-white/15">
+            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-3 border border-white/15">
               <div className="flex items-center justify-between">
                 <span className="text-xs text-indigo-200">Em Dia</span>
                 <CheckCircle2 className="w-4 h-4 text-emerald-300" />
@@ -147,7 +147,7 @@ export const NeglectedDashboard: React.FC<NeglectedDashboardProps> = ({
               <span className="text-[11px] text-emerald-200 font-medium">Conexões ativas</span>
             </div>
 
-            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-3.5 border border-white/15">
+            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-3 border border-white/15">
               <div className="flex items-center justify-between">
                 <span className="text-xs text-indigo-200">Média Intimidade</span>
                 <TrendingUp className="w-4 h-4 text-cyan-300" />
