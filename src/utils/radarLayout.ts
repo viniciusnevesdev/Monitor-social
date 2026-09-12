@@ -47,7 +47,7 @@ export const DEFAULT_RADAR_CARD_LAYOUT: RadarCardLayout = {
   schema: 'lacos-radar-card-layout',
   version: 2,
   elements: {
-    avatar: { x: 6, y: 5, w: 15, h: 17 },
+    avatar: { x: 6, y: 6, w: 15, h: 17 },
     name: { x: 24, y: 6, w: 35, h: 9, fontSize: 18, fontWeight: 800, color: '#0f172a', align: 'left' },
     category: { x: 24, y: 16, w: 34, h: 7, fontSize: 10, fontWeight: 600, color: '#64748b', align: 'left' },
     status: { x: 60, y: 7, w: 34, h: 10 },
