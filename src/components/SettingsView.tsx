@@ -212,7 +212,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `social-sync-backup-${new Date().toISOString().split('T')[0]}.json`;
+    link.download = `lacos-backup-${new Date().toISOString().split('T')[0]}.json`;
     link.click();
     URL.revokeObjectURL(url);
     setExportSuccess(true);
@@ -288,7 +288,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
         ) : (
           <div className="space-y-3">
             <p className="text-xs text-slate-300 leading-relaxed">
-              Você pode fixar o <strong>SocialSync</strong> diretamente na gaveta de aplicativos ou tela de início para receber lembretes periódicos e registrar contatos rapidamente.
+              Você pode fixar o <strong>Laços</strong> diretamente na gaveta de aplicativos ou tela de início para receber lembretes periódicos e registrar contatos rapidamente.
             </p>
             <button
               onClick={onInstallPwa}
