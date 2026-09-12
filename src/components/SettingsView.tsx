@@ -26,6 +26,7 @@ import {
 } from '../icons';
 
 import { APP_VERSION } from '../version';
+import type { ThemePreference } from '../App';
 
 const SUGGESTIONS_LIST = [
   {
@@ -77,6 +78,8 @@ interface SettingsViewProps {
   deferredPrompt: any;
   onInstallPwa: () => void;
   isPwaInstalled: boolean;
+  themePreference: ThemePreference;
+  onThemeChange: (theme: ThemePreference) => void;
 }
 
 export const SettingsView: React.FC<SettingsViewProps> = ({
@@ -86,6 +89,8 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
   deferredPrompt,
   onInstallPwa,
   isPwaInstalled,
+  themePreference,
+  onThemeChange,
 }) => {
   const [exportSuccess, setExportSuccess] = useState(false);
   const [importError, setImportError] = useState<string | null>(null);
@@ -264,6 +269,37 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
           <Sparkles className="w-4 h-4" />
           Abrir editor de ícones
         </button>
+      </div>
+
+      {/* Tema do Aplicativo */}
+      <div className="bg-white rounded-3xl p-5 border border-slate-200 shadow-sm space-y-3">
+        <div>
+          <h2 className="text-base font-bold text-slate-900">Aparência</h2>
+          <p className="text-xs text-slate-500 mt-0.5">
+            Escolha o tema do Laços. No modo Automático, o app acompanha o tema do celular.
+          </p>
+        </div>
+        <div className="grid grid-cols-3 gap-2 p-1 rounded-2xl bg-slate-100 border border-slate-200" role="group" aria-label="Tema do aplicativo">
+          {([
+            ['light', 'Claro'],
+            ['dark', 'Escuro'],
+            ['system', 'Automático'],
+          ] as const).map(([value, label]) => (
+            <button
+              key={value}
+              type="button"
+              onClick={() => onThemeChange(value)}
+              className={`px-3 py-2 rounded-xl text-xs font-bold transition-all ${
+                themePreference === value
+                  ? 'bg-white text-indigo-700 shadow-sm border border-slate-200'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+              aria-pressed={themePreference === value}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* PWA Card */}
