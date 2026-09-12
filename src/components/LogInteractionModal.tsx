@@ -80,24 +80,25 @@ export const LogInteractionModal: React.FC<LogInteractionModalProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-fadeIn">
       <div
-        className="bg-white rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-slate-100 flex flex-col"
+        className="interaction-modal bg-white rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-slate-100 flex flex-col"
         role="dialog"
         aria-modal="true"
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-5 border-b border-slate-100">
-          <div>
-            <h2 className="text-lg font-bold text-slate-900">Registrar Conversa</h2>
-            <p className="text-xs text-slate-500">
-              Atualize seu histórico e o índice de intimidade deste relacionamento.
-            </p>
-          </div>
+        <div className="relative p-5 pt-5 border-b border-slate-100 text-center">
           <button
             onClick={onClose}
-            className="p-2 rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-colors"
+            aria-label="Fechar"
+            className="modal-close-button absolute left-4 top-4 p-2 rounded-full transition-all shadow-sm"
           >
             <X className="w-5 h-5" />
           </button>
+          <div className="px-10">
+            <h2 className="text-lg font-bold text-slate-900">Registrar Conversa</h2>
+            <p className="text-xs text-slate-500 mt-0.5">
+              Atualize seu histórico e o índice de intimidade deste relacionamento.
+            </p>
+          </div>
         </div>
 
         {/* Form */}
