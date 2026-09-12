@@ -24,6 +24,7 @@ interface ContactsListProps {
   onSelectContact: (contactId: string) => void;
   onOpenNewContactModal: () => void;
   onOpenLogModal: (contactId?: string) => void;
+  onOpenScheduleModal: (contact: Contact) => void;
   onOpenImportModal?: () => void;
   radarLayout: RadarCardLayout;
   onRadarLayoutChange: (layout: RadarCardLayout) => void;
@@ -34,6 +35,7 @@ export const ContactsList: React.FC<ContactsListProps> = ({
   onSelectContact,
   onOpenNewContactModal,
   onOpenLogModal,
+  onOpenScheduleModal,
   onOpenImportModal,
   radarLayout,
   onRadarLayoutChange,
@@ -216,6 +218,7 @@ export const ContactsList: React.FC<ContactsListProps> = ({
               layout={radarLayout}
               onSelectContact={() => onSelectContact(contact.id)}
               onOpenLogModal={() => onOpenLogModal(contact.id)}
+              onOpenScheduleModal={() => onOpenScheduleModal(contact)}
             />
           ))}
         </div>

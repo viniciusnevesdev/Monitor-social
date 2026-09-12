@@ -2,7 +2,7 @@ import React from 'react';
 import { Contact, CalculatedScores } from '../types';
 import { formatTimeAgo, CATEGORY_LABELS } from '../utils/calculations';
 import { RadarCardLayout, RadarElementId, RadarElementLayout } from '../utils/radarLayout';
-import { Calendar, MessageSquare } from '../icons';
+import { AlertTriangle, Calendar, Heart, MessageSquare, PlusCircle } from '../icons';
 import { ScoreBadge } from './ScoreBadge';
 
 interface RadarContactCardProps {
@@ -11,6 +11,7 @@ interface RadarContactCardProps {
   layout: RadarCardLayout;
   onSelectContact?: () => void;
   onOpenLogModal?: () => void;
+  onOpenScheduleModal?: () => void;
   editingElement?: RadarElementId;
   onSelectElement?: (id: RadarElementId) => void;
   onElementPointerDown?: (id: RadarElementId, event: React.PointerEvent<HTMLDivElement>) => void;
@@ -38,6 +39,7 @@ export const RadarContactCard: React.FC<RadarContactCardProps> = ({
   layout,
   onSelectContact,
   onOpenLogModal,
+  onOpenScheduleModal,
   editingElement,
   onSelectElement,
   onElementPointerDown,
@@ -45,6 +47,11 @@ export const RadarContactCard: React.FC<RadarContactCardProps> = ({
 }) => {
   const cat = CATEGORY_LABELS[contact.category] || CATEGORY_LABELS.conhecidos;
   const editMode = Boolean(onSelectElement);
+  const lastInteraction = contact.interactions?.length
+    ? [...contact.interactions].sort((a, b) => b.date.localeCompare(a.date))[0]
+    : undefined;
+  const conversationPrompt = lastInteraction?.nextTopicHook || contact.notes || 'Sem lembrete para a próxima conversa.';
+  const progress = Math.min(100, Math.round((scores.daysSinceLastInteraction / Math.max(contact.targetIntervalDays, 1)) * 100));
 
   const elementProps = (id: RadarElementId) => ({
     className: `radar-card-element ${editingElement === id ? 'radar-card-element--selected' : ''}`,
@@ -88,23 +95,24 @@ export const RadarContactCard: React.FC<RadarContactCardProps> = ({
       </div>
 
       <div {...elementProps('status')} className={`${elementProps('status').className} radar-card-status`} style={position(layout.elements.status)}>
-        <ScoreBadge type="status" value={scores.status} size="sm" showLabel={false} />
+        <ScoreBadge type="status" value={scores.status} size="sm" />
+      </div>
+
+      <div {...elementProps('lastContact')} className={`${elementProps('lastContact').className} radar-card-conversation`} style={textStyle(layout.elements.lastContact)}>
+        <div className="radar-card-conversation-top"><span><Calendar /> Última conversa:</span><strong>{formatTimeAgo(scores.daysSinceLastInteraction)}</strong></div>
+        <div className="radar-card-conversation-goal"><span>Meta definida:</span><b>Falar a cada {contact.targetIntervalDays} {contact.targetIntervalDays === 1 ? 'dia' : 'dias'}</b>{scores.isOverdue && <em>({scores.overdueDays}d em atraso)</em>}</div>
+        <div className={`radar-card-progress radar-card-progress--${scores.status}`}><i style={{ width: `${progress}%` }} /></div>
       </div>
 
       <div {...elementProps('scores')} className={`${elementProps('scores').className} radar-card-scores`} style={position(layout.elements.scores)}>
-        <div><span>Intimidade</span><strong className="text-indigo-700">{scores.intimacyScore}</strong></div>
-        <div><span>Importância</span><strong className="text-amber-600">{contact.importanceRating}/10</strong></div>
-        <div><span>Bem-estar</span><strong className="text-rose-600">{contact.wellbeingRating}/10</strong></div>
+        <div className="radar-score-pill radar-score-pill--intimacy"><span>Intimidade:</span><strong>{scores.intimacyScore.toFixed(1)}<small>/10</small></strong></div>
+        <div className="radar-score-pill radar-score-pill--importance"><span>Importância:</span><strong>{contact.importanceRating}<small>/10</small></strong></div>
+        <div className="radar-score-pill radar-score-pill--wellbeing"><span><Heart /> Bem-estar:</span><strong>{contact.wellbeingRating}<small>/10</small></strong></div>
+        <div className="radar-score-pill radar-score-pill--priority"><span><AlertTriangle /> Prioridade:</span><strong>{scores.priorityScore}<small>%</small></strong></div>
       </div>
 
-      <div {...elementProps('lastContact')} className={`${elementProps('lastContact').className} radar-card-text radar-card-last-contact`} style={textStyle(layout.elements.lastContact)}>
-        <Calendar />
-        <span>{formatTimeAgo(scores.daysSinceLastInteraction)}</span>
-        <span className="radar-card-goal">Meta: {contact.targetIntervalDays}d</span>
-      </div>
-
-      <div {...elementProps('interactionCount')} className={`${elementProps('interactionCount').className} radar-card-text radar-card-interaction-count`} style={textStyle(layout.elements.interactionCount)}>
-        {contact.interactions?.length || 0} {(contact.interactions?.length || 0) === 1 ? 'conversa' : 'conversas'}
+      <div {...elementProps('interactionCount')} className={`${elementProps('interactionCount').className} radar-card-memory`} style={textStyle(layout.elements.interactionCount)}>
+        <strong>LEMBRE-SE DE PERGUNTAR:</strong><p>“{conversationPrompt}”</p>
       </div>
 
       <div {...elementProps('action')} className={`${elementProps('action').className} radar-card-action`} style={position(layout.elements.action)}>
@@ -116,9 +124,19 @@ export const RadarContactCard: React.FC<RadarContactCardProps> = ({
           type="button"
           tabIndex={editMode ? -1 : undefined}
         >
-          <MessageSquare />
+          <PlusCircle />
           Registrar
         </button>
+        <button
+          className="radar-card-calendar-action"
+          onClick={(event) => {
+            event.stopPropagation();
+            if (!editMode) onOpenScheduleModal?.();
+          }}
+          type="button"
+          aria-label="Agendar encontro"
+          tabIndex={editMode ? -1 : undefined}
+        ><Calendar /></button>
       </div>
       {editingElement && (
         <span
