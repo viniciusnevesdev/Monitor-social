@@ -14,9 +14,11 @@ import { LogInteractionModal } from './components/LogInteractionModal';
 import { ScheduleMeetModal } from './components/ScheduleMeetModal';
 import { ImportContactsModal } from './components/ImportContactsModal';
 import { Bell, Sparkles, Heart, loadGlobalIconOverrides } from './icons';
+import { DEFAULT_RADAR_CARD_LAYOUT, normalizeRadarLayout, RadarCardLayout } from './utils/radarLayout';
 
 const STORAGE_KEY = 'social_sync_contacts_v1';
 const THEME_KEY = 'lacos_theme_preference';
+const RADAR_LAYOUT_KEY = 'lacos_radar_card_layout_v1';
 export type ThemePreference = 'light' | 'dark' | 'system';
 
 export default function App() {
@@ -24,6 +26,18 @@ export default function App() {
     const saved = localStorage.getItem(THEME_KEY);
     return saved === 'light' || saved === 'dark' || saved === 'system' ? saved : 'system';
   });
+
+  const [radarLayout, setRadarLayout] = useState<RadarCardLayout>(() => {
+    try {
+      return normalizeRadarLayout(JSON.parse(localStorage.getItem(RADAR_LAYOUT_KEY) || 'null'));
+    } catch {
+      return DEFAULT_RADAR_CARD_LAYOUT;
+    }
+  });
+
+  useEffect(() => {
+    localStorage.setItem(RADAR_LAYOUT_KEY, JSON.stringify(radarLayout));
+  }, [radarLayout]);
 
   useEffect(() => {
     const media = window.matchMedia('(prefers-color-scheme: dark)');
@@ -382,6 +396,8 @@ export default function App() {
             onOpenNewContactModal={handleOpenNewContactModal}
             onOpenLogModal={handleOpenLogModal}
             onOpenImportModal={() => setIsImportModalOpen(true)}
+            radarLayout={radarLayout}
+            onRadarLayoutChange={setRadarLayout}
           />
         )}
 
