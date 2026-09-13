@@ -21,7 +21,7 @@ export interface RadarElementLayout {
 
 export interface RadarCardLayout {
   schema: 'lacos-radar-card-layout';
-  version: 4;
+  version: 5;
   elements: Record<RadarElementId, RadarElementLayout>;
 }
 
@@ -45,16 +45,16 @@ export const RADAR_TEXT_ELEMENTS: RadarElementId[] = [
 
 export const DEFAULT_RADAR_CARD_LAYOUT: RadarCardLayout = {
   schema: 'lacos-radar-card-layout',
-  version: 4,
+  version: 5,
   elements: {
-    avatar: { x: 6, y: 6, w: 18, h: 19 },
-    name: { x: 27, y: 6, w: 65, h: 7, fontSize: 20, fontWeight: 800, color: '#0f172a', align: 'left' },
-    category: { x: 27, y: 15, w: 65, h: 10, fontSize: 10, fontWeight: 600, color: '#64748b', align: 'left' },
-    status: { x: 27, y: 15, w: 30, h: 7 },
-    lastContact: { x: 7, y: 31, w: 86, h: 19, fontSize: 11, fontWeight: 500, color: '#526a96', align: 'left' },
-    scores: { x: 7, y: 53, w: 86, h: 14 },
-    interactionCount: { x: 7, y: 70, w: 86, h: 14, fontSize: 11, fontWeight: 500, color: '#13283d', align: 'left' },
-    action: { x: 7, y: 87, w: 86, h: 10 },
+    avatar: { x: 5, y: 5, w: 17, h: 17 },
+    name: { x: 25, y: 5, w: 68, h: 7, fontSize: 18, fontWeight: 800, color: '#0f172a', align: 'left' },
+    category: { x: 25, y: 14, w: 68, h: 9, fontSize: 10, fontWeight: 600, color: '#64748b', align: 'left' },
+    status: { x: 25, y: 14, w: 30, h: 7 },
+    lastContact: { x: 6, y: 27, w: 88, h: 18, fontSize: 11, fontWeight: 500, color: '#526a96', align: 'left' },
+    scores: { x: 6, y: 48, w: 88, h: 14 },
+    interactionCount: { x: 6, y: 65, w: 88, h: 14, fontSize: 11, fontWeight: 500, color: '#13283d', align: 'left' },
+    action: { x: 6, y: 83, w: 88, h: 10 },
   },
 };
 
@@ -68,7 +68,7 @@ export function normalizeRadarLayout(value: unknown): RadarCardLayout {
   const fallback = cloneRadarLayout(DEFAULT_RADAR_CARD_LAYOUT);
   if (!value || typeof value !== 'object') return fallback;
   const candidate = value as Partial<RadarCardLayout>;
-  if (candidate.schema !== 'lacos-radar-card-layout' || candidate.version !== 4 || !candidate.elements) return fallback;
+  if (candidate.schema !== 'lacos-radar-card-layout' || candidate.version !== 5 || !candidate.elements) return fallback;
 
   const elements = { ...fallback.elements };
   (Object.keys(fallback.elements) as RadarElementId[]).forEach((id) => {
@@ -88,7 +88,7 @@ export function normalizeRadarLayout(value: unknown): RadarCardLayout {
     };
   });
 
-  return { schema: 'lacos-radar-card-layout', version: 4, elements };
+  return { schema: 'lacos-radar-card-layout', version: 5, elements };
 }
 
 export function patchRadarElement(
