@@ -18,7 +18,9 @@ import { DEFAULT_RADAR_CARD_LAYOUT, normalizeRadarLayout, RadarCardLayout } from
 
 const STORAGE_KEY = 'social_sync_contacts_v1';
 const THEME_KEY = 'lacos_theme_preference';
-const RADAR_LAYOUT_KEY = 'lacos_radar_card_layout_v3';
+// O editor antigo gravava posições livres que conflitam com o cartão compacto.
+// Mantemos esse dado intacto em v3, mas iniciamos o novo modelo com suas medidas aprovadas.
+const RADAR_LAYOUT_KEY = 'lacos_radar_card_layout_v4';
 export type ThemePreference = 'light' | 'dark' | 'system';
 
 export default function App() {
