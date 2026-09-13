@@ -4,6 +4,12 @@ PWA de monitoramento de interações sociais. Esta branch é destinada a testes 
 
 ## Versão atual
 
+**v1.4.0-beta.16**
+
+- Corrige a legibilidade do ícone de WhatsApp nos cartões do Radar antes de abrir o contato.
+- Mantém o botão em fundo menta e força o SVG personalizado para verde visível, inclusive quando o SVG traz preenchimento branco próprio.
+- Aumenta levemente o ícone e preserva contraste nos temas claro e escuro.
+
 **v1.4.0-beta.5**
 
 - Adiciona temas **Claro**, **Escuro** e **Automático**, com o Automático seguindo o tema do sistema.
