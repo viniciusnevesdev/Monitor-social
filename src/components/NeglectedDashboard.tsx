@@ -4,6 +4,8 @@ import { computeContactScores, formatTimeAgo, CATEGORY_LABELS } from '../utils/c
 import { ScoreBadge } from './ScoreBadge';
 import { WeeklySocialDigest } from './WeeklySocialDigest';
 import { RelationshipMatrix } from './RelationshipMatrix';
+import { RadarContactCard } from './RadarContactCard';
+import { RadarCardLayout } from '../utils/radarLayout';
 import {
   MessageCircle,
   PhoneCall,
@@ -27,6 +29,7 @@ interface NeglectedDashboardProps {
   onOpenNewContactModal: () => void;
   onNavigateToTab: (tab: any) => void;
   onOpenScheduleModal?: (contact: Contact) => void;
+  radarLayout: RadarCardLayout;
 }
 
 const ICEBREAKER_SUGGESTIONS = [
@@ -44,6 +47,7 @@ export const NeglectedDashboard: React.FC<NeglectedDashboardProps> = ({
   onOpenNewContactModal,
   onNavigateToTab,
   onOpenScheduleModal,
+  radarLayout,
 }) => {
   const [filterCategory, setFilterCategory] = useState<string>('todos');
   const [expandedIcebreakerId, setExpandedIcebreakerId] = useState<string | null>(null);
@@ -270,6 +274,18 @@ export const NeglectedDashboard: React.FC<NeglectedDashboardProps> = ({
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {displayedContacts.map(({ contact, scores }) => {
+              return (
+                <RadarContactCard
+                  key={contact.id}
+                  contact={contact}
+                  scores={scores}
+                  layout={radarLayout}
+                  onSelectContact={() => onOpenContactDetail(contact.id)}
+                  onOpenLogModal={() => onOpenLogModal(contact.id)}
+                  onOpenScheduleModal={() => onOpenScheduleModal?.(contact)}
+                />
+              );
+
               const categoryConfig = CATEGORY_LABELS[contact.category] || CATEGORY_LABELS.conhecidos;
               const isNeglected = scores.status === 'negligenciado';
               const isIcebreakerOpen = expandedIcebreakerId === contact.id;
