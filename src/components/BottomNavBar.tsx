@@ -63,6 +63,7 @@ export const BottomNavBar: React.FC<BottomNavBarProps> = ({
                   id={`nav-btn-${tab.id}`}
                   onClick={() => onChangeTab(tab.id)}
                   type="button"
+                  aria-current={isActive ? 'page' : undefined}
                   className={`group relative flex flex-col items-center justify-center w-full py-1.5 px-1 transition-all duration-300 rounded-full ${
                     isActive
                       ? 'text-indigo-700 font-semibold'
@@ -82,7 +83,7 @@ export const BottomNavBar: React.FC<BottomNavBarProps> = ({
                   {/* Icon with subtle scale on active */}
                   <div className="relative">
                     <Icon
-                      className={`w-5 h-5 transition-transform duration-200 ${
+                      className={`bottom-nav-icon w-5 h-5 transition-transform duration-200 ${
                         isActive ? 'scale-105 text-indigo-700' : 'text-slate-800 group-hover:scale-105'
                       } ${tab.isPrimaryAction && !isActive ? 'text-indigo-700' : ''}`}
                     />
