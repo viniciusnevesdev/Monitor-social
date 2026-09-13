@@ -20,7 +20,7 @@ const STORAGE_KEY = 'social_sync_contacts_v1';
 const THEME_KEY = 'lacos_theme_preference';
 // O editor antigo gravava posições livres que conflitam com o cartão compacto.
 // Mantemos esse dado intacto em v3, mas iniciamos o novo modelo com suas medidas aprovadas.
-const RADAR_LAYOUT_KEY = 'lacos_radar_card_layout_v4';
+const RADAR_LAYOUT_KEY = 'lacos_radar_card_layout_v5';
 export type ThemePreference = 'light' | 'dark' | 'system';
 
 export default function App() {
@@ -388,6 +388,7 @@ export default function App() {
               setScheduleContact(c);
               setIsScheduleModalOpen(true);
             }}
+            radarLayout={radarLayout}
           />
         )}
 
