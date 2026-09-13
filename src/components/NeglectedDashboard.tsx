@@ -92,7 +92,7 @@ export const NeglectedDashboard: React.FC<NeglectedDashboardProps> = ({
 
         <div className="relative z-10">
           <div className="flex flex-col gap-3 mb-3">
-            <div>
+            <div className="dashboard-hero-copy text-center">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-white/15 backdrop-blur-md border border-white/20 text-indigo-100">
                 <Sparkles className="w-3.5 h-3.5 text-cyan-300" />
                 Painel de Conexões Sociais
@@ -100,7 +100,7 @@ export const NeglectedDashboard: React.FC<NeglectedDashboardProps> = ({
               <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white mt-1.5">
                 Prioridades de Relacionamento
               </h1>
-              <p className="text-sm text-indigo-100/90 mt-0.5 max-w-xl">
+              <p className="text-sm text-indigo-100/90 mt-0.5 max-w-xl mx-auto">
                 Monitore interações, proteja laços essenciais e reconecte-se com pessoas queridas que ficaram sem contato.
               </p>
             </div>
@@ -121,7 +121,7 @@ export const NeglectedDashboard: React.FC<NeglectedDashboardProps> = ({
             <div className="bg-white/10 backdrop-blur-md rounded-2xl p-3 border border-white/15">
               <div className="flex items-center justify-between">
                 <span className="text-xs text-indigo-200">Negligenciados</span>
-                <AlertOctagon className="w-4 h-4 text-rose-300" />
+                <AlertOctagon className="w-5 h-5 text-rose-300" />
               </div>
               <div className="text-2xl font-bold text-white mt-1">
                 {neglectedList.length}
@@ -132,7 +132,7 @@ export const NeglectedDashboard: React.FC<NeglectedDashboardProps> = ({
             <div className="bg-white/10 backdrop-blur-md rounded-2xl p-3 border border-white/15">
               <div className="flex items-center justify-between">
                 <span className="text-xs text-indigo-200">Em Atenção</span>
-                <Calendar className="w-4 h-4 text-amber-300" />
+                <Calendar className="w-5 h-5 text-amber-300" />
               </div>
               <div className="text-2xl font-bold text-white mt-1">
                 {attentionList.length}
@@ -143,7 +143,7 @@ export const NeglectedDashboard: React.FC<NeglectedDashboardProps> = ({
             <div className="bg-white/10 backdrop-blur-md rounded-2xl p-3 border border-white/15">
               <div className="flex items-center justify-between">
                 <span className="text-xs text-indigo-200">Em Dia</span>
-                <CheckCircle2 className="w-4 h-4 text-emerald-300" />
+                <CheckCircle2 className="w-5 h-5 text-emerald-300" />
               </div>
               <div className="text-2xl font-bold text-white mt-1">
                 {onTrackList.length}
@@ -154,7 +154,7 @@ export const NeglectedDashboard: React.FC<NeglectedDashboardProps> = ({
             <div className="bg-white/10 backdrop-blur-md rounded-2xl p-3 border border-white/15">
               <div className="flex items-center justify-between">
                 <span className="text-xs text-indigo-200">Média Intimidade</span>
-                <TrendingUp className="w-4 h-4 text-cyan-300" />
+                <TrendingUp className="w-5 h-5 text-cyan-300" />
               </div>
               <div className="text-2xl font-bold text-white mt-1">
                 {avgIntimacy}
