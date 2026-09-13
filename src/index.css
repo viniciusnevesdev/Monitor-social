@@ -221,6 +221,24 @@ html[data-theme='dark'] .bottom-nav-surface [class*="text-slate-7"] {
   color: #e2e8f0 !important;
 }
 
+html[data-theme='light'] .bottom-nav-surface .bottom-nav-icon {
+  color: #4f46e5 !important;
+  stroke: currentColor !important;
+}
+
+html[data-theme='light'] .bottom-nav-surface button[aria-current='page'] .bottom-nav-icon {
+  color: #3730a3 !important;
+}
+
+html[data-theme='light'] .bottom-nav-surface .bottom-nav-icon *,
+html[data-theme='light'] .bottom-nav-surface .bottom-nav-icon [stroke] {
+  stroke: currentColor !important;
+}
+
+html[data-theme='light'] .bottom-nav-surface .bottom-nav-icon [fill]:not([fill='none']) {
+  fill: currentColor !important;
+}
+
 html[data-theme='dark'] .interaction-modal {
   box-shadow: 0 24px 80px rgba(0, 0, 0, 0.55) !important;
 }
