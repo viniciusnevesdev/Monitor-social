@@ -279,10 +279,25 @@ html[data-theme='dark'] .interaction-modal {
 .radar-card-action .radar-card-icon-action { display:grid; width:40px; height:40px; flex:0 0 40px; place-items:center; padding:0; border:1px solid; box-shadow:none; }
 .radar-card-action .radar-card-icon-action svg { width:19px; height:19px; stroke-width:2.4; }
 .radar-card-action .radar-card-calendar-action { border-color:#818cf8; background:#e0e7ff; color:#1e1b4b; }
-.radar-card-action .radar-card-whatsapp-action { border-color:#34d399; background:#d1fae5; color:#064e3b; }
+.radar-card-action .radar-card-whatsapp-action { border-color:#6ee7b7; background:#ecfdf5; color:#16a34a; }
+.radar-card-action .radar-card-whatsapp-action .radar-card-whatsapp-icon { width:22px; height:22px; color:#16a34a; opacity:1; }
+.radar-card-action .radar-card-whatsapp-action .radar-card-whatsapp-icon svg { width:22px; height:22px; color:#16a34a; opacity:1; }
+.radar-card-action .radar-card-whatsapp-action .radar-card-whatsapp-icon svg *,
+.radar-card-action .radar-card-whatsapp-action > svg * { stroke:#16a34a !important; }
+.radar-card-action .radar-card-whatsapp-action .radar-card-whatsapp-icon svg [fill]:not([fill="none"]),
+.radar-card-action .radar-card-whatsapp-action > svg [fill]:not([fill="none"]) { fill:#16a34a !important; }
 .radar-card-action .radar-card-icon-action svg,
 .radar-card-action .radar-card-icon-action svg * { stroke:currentColor !important; }
+.radar-card-action .radar-card-whatsapp-action:disabled { opacity:.72; color:#16a34a; cursor:not-allowed; }
+html[data-theme='dark'] .radar-card-action .radar-card-whatsapp-action { border-color:#34d399; background:#052e2b; color:#6ee7b7; }
+html[data-theme='dark'] .radar-card-action .radar-card-whatsapp-action .radar-card-whatsapp-icon,
+html[data-theme='dark'] .radar-card-action .radar-card-whatsapp-action .radar-card-whatsapp-icon svg { color:#6ee7b7; }
+html[data-theme='dark'] .radar-card-action .radar-card-whatsapp-action .radar-card-whatsapp-icon svg *,
+html[data-theme='dark'] .radar-card-action .radar-card-whatsapp-action > svg * { stroke:#6ee7b7 !important; }
+html[data-theme='dark'] .radar-card-action .radar-card-whatsapp-action .radar-card-whatsapp-icon svg [fill]:not([fill="none"]),
+html[data-theme='dark'] .radar-card-action .radar-card-whatsapp-action > svg [fill]:not([fill="none"]) { fill:#6ee7b7 !important; }
 .radar-card-action .radar-card-icon-action:disabled { opacity:.42; cursor:not-allowed; }
+.radar-card-action .radar-card-whatsapp-action:disabled { opacity:.72; }
 .radar-card-action .radar-card-icon-action:hover { filter:brightness(.97); }
 html[data-theme='dark'] .radar-card-header .radar-card-name { color:#f8fafc; }
 html[data-theme='dark'] .radar-score-pill span { color:currentColor; }
