@@ -160,7 +160,7 @@ export const RadarContactCard: React.FC<RadarContactCardProps> = ({
           aria-label={whatsappNumber ? `Abrir WhatsApp de ${contact.name}` : 'WhatsApp indisponível: telefone não cadastrado'}
           disabled={!whatsappNumber}
           tabIndex={editMode ? -1 : undefined}
-        ><MessageCircle /></button>
+        ><MessageCircle className="radar-card-whatsapp-icon" /></button>
       </div>
       {editingElement && (
         <span
