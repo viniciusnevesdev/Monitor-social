@@ -260,8 +260,8 @@ html[data-theme='dark'] .interaction-modal {
 .radar-card-action .radar-card-primary-action { width:auto; min-width:148px; height:40px; flex:0 0 auto; padding:0 14px; }
 .radar-card-action .radar-card-icon-action { display:grid; width:40px; height:40px; flex:0 0 40px; place-items:center; padding:0; border:1px solid; box-shadow:none; }
 .radar-card-action .radar-card-icon-action svg { width:19px; height:19px; stroke-width:2.4; }
-.radar-card-action .radar-card-calendar-action { border-color:#c7d2fe; background:#f5f3ff; color:#5046d9; }
-.radar-card-action .radar-card-whatsapp-action { border-color:#99f6e4; background:#f0fdfa; color:#0f8f74; }
+.radar-card-action .radar-card-calendar-action { border-color:#a5b4fc; background:#eef2ff; color:#312e81; }
+.radar-card-action .radar-card-whatsapp-action { border-color:#5eead4; background:#ecfdf5; color:#047857; }
 .radar-card-action .radar-card-icon-action:disabled { opacity:.42; cursor:not-allowed; }
 .radar-card-action .radar-card-icon-action:hover { filter:brightness(.97); }
 html[data-theme='dark'] .radar-card-header .radar-card-name { color:#f8fafc; }
