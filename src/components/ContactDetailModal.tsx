@@ -2,6 +2,7 @@ import React from 'react';
 import { Contact, Interaction } from '../types';
 import { computeContactScores, formatTimeAgo, CATEGORY_LABELS, CHANNEL_CONFIG } from '../utils/calculations';
 import { ScoreBadge } from './ScoreBadge';
+import { ContactAvatar } from './ContactAvatar';
 import {
   X,
   Phone,
@@ -67,12 +68,10 @@ export const ContactDetailModal: React.FC<ContactDetailModalProps> = ({
           </button>
 
           <div className="flex items-start gap-4">
-            <div
-              className="w-16 h-16 rounded-2xl flex items-center justify-center text-white font-bold text-2xl shadow-md shrink-0"
-              style={{ backgroundColor: contact.avatarColor || '#6366f1' }}
-            >
-              {contact.name.charAt(0).toUpperCase()}
-            </div>
+            <ContactAvatar
+              contact={contact}
+              className="w-16 h-16 rounded-2xl text-2xl shadow-md shrink-0"
+            />
 
             <div className="flex-1 pr-6">
               <div className="flex items-center gap-2">
