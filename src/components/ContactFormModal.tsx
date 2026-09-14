@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Contact, ContactCategory } from '../types';
 import { CATEGORY_LABELS } from '../utils/calculations';
 import { X, Heart, Star, Clock, Bell, User, Phone, Check } from '../icons';
@@ -21,14 +21,77 @@ const AVATAR_COLORS = [
   '#06b6d4', // Cyan
 ];
 
+const MAX_AVATAR_FILE_SIZE = 20 * 1024 * 1024;
+const AVATAR_OUTPUT_SIZE = 512;
+
+function compressAvatarPhoto(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    if (!file.type.startsWith('image/')) {
+      reject(new Error('Escolha um arquivo de imagem.'));
+      return;
+    }
+
+    if (file.size > MAX_AVATAR_FILE_SIZE) {
+      reject(new Error('A foto é muito grande. Escolha uma imagem de até 20 MB.'));
+      return;
+    }
+
+    const objectUrl = URL.createObjectURL(file);
+    const image = new Image();
+
+    image.onload = () => {
+      try {
+        const side = Math.min(image.naturalWidth, image.naturalHeight);
+        if (!side) throw new Error('Não foi possível ler as dimensões da foto.');
+
+        const outputSize = Math.min(AVATAR_OUTPUT_SIZE, side);
+        const canvas = document.createElement('canvas');
+        canvas.width = outputSize;
+        canvas.height = outputSize;
+
+        const ctx = canvas.getContext('2d');
+        if (!ctx) throw new Error('Não foi possível preparar a foto.');
+
+        const sourceX = (image.naturalWidth - side) / 2;
+        const sourceY = (image.naturalHeight - side) / 2;
+
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, outputSize, outputSize);
+        ctx.drawImage(
+          image,
+          sourceX,
+          sourceY,
+          side,
+          side,
+          0,
+          0,
+          outputSize,
+          outputSize
+        );
+
+        resolve(canvas.toDataURL('image/jpeg', 0.82));
+      } catch (error) {
+        reject(error instanceof Error ? error : new Error('Não foi possível processar a foto.'));
+      } finally {
+        URL.revokeObjectURL(objectUrl);
+      }
+    };
+
+    image.onerror = () => {
+      URL.revokeObjectURL(objectUrl);
+      reject(new Error('Não foi possível abrir essa foto.'));
+    };
+
+    image.src = objectUrl;
+  });
+}
+
 export const ContactFormModal: React.FC<ContactFormModalProps> = ({
   isOpen,
   onClose,
   onSaveContact,
   contactToEdit,
 }) => {
-  if (!isOpen) return null;
-
   const [name, setName] = useState(contactToEdit?.name || '');
   const [nickname, setNickname] = useState(contactToEdit?.nickname || '');
   const [phone, setPhone] = useState(contactToEdit?.phone || '');
@@ -38,6 +101,9 @@ export const ContactFormModal: React.FC<ContactFormModalProps> = ({
   const [avatarColor, setAvatarColor] = useState(
     contactToEdit?.avatarColor || AVATAR_COLORS[0]
   );
+  const [avatarImage, setAvatarImage] = useState(contactToEdit?.avatarImage || '');
+  const [avatarError, setAvatarError] = useState<string | null>(null);
+  const [avatarProcessing, setAvatarProcessing] = useState(false);
   const [importanceRating, setImportanceRating] = useState<number>(
     contactToEdit?.importanceRating ?? 8
   );
@@ -52,6 +118,43 @@ export const ContactFormModal: React.FC<ContactFormModalProps> = ({
   );
   const [notes, setNotes] = useState(contactToEdit?.notes || '');
 
+  useEffect(() => {
+    if (!isOpen) return;
+
+    setName(contactToEdit?.name || '');
+    setNickname(contactToEdit?.nickname || '');
+    setPhone(contactToEdit?.phone || '');
+    setCategory(contactToEdit?.category || 'amigos_proximos');
+    setAvatarColor(contactToEdit?.avatarColor || AVATAR_COLORS[0]);
+    setAvatarImage(contactToEdit?.avatarImage || '');
+    setImportanceRating(contactToEdit?.importanceRating ?? 8);
+    setWellbeingRating(contactToEdit?.wellbeingRating ?? 8);
+    setTargetIntervalDays(contactToEdit?.targetIntervalDays ?? 7);
+    setReminderEnabled(contactToEdit?.reminderEnabled ?? true);
+    setNotes(contactToEdit?.notes || '');
+    setAvatarError(null);
+    setAvatarProcessing(false);
+  }, [isOpen, contactToEdit]);
+
+  if (!isOpen) return null;
+
+  const handleAvatarFile = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    event.target.value = '';
+    if (!file) return;
+
+    setAvatarProcessing(true);
+    setAvatarError(null);
+    try {
+      const compressed = await compressAvatarPhoto(file);
+      setAvatarImage(compressed);
+    } catch (error) {
+      setAvatarError(error instanceof Error ? error.message : 'Não foi possível processar a foto.');
+    } finally {
+      setAvatarProcessing(false);
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim()) return;
@@ -63,6 +166,7 @@ export const ContactFormModal: React.FC<ContactFormModalProps> = ({
       phone: phone.trim() || undefined,
       category,
       avatarColor,
+      avatarImage: avatarImage || undefined,
       importanceRating,
       wellbeingRating,
       targetIntervalDays,
@@ -178,25 +282,80 @@ export const ContactFormModal: React.FC<ContactFormModalProps> = ({
             </div>
           </div>
 
-          {/* Cor de Identificação */}
-          <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-              Cor do Perfil
-            </label>
-            <div className="flex items-center gap-2">
-              {AVATAR_COLORS.map((color) => (
-                <button
-                  key={color}
-                  type="button"
-                  onClick={() => setAvatarColor(color)}
-                  className={`w-7 h-7 rounded-full transition-transform ${
-                    avatarColor === color
-                      ? 'scale-125 ring-2 ring-offset-2 ring-slate-900'
-                      : 'hover:scale-110'
-                  }`}
-                  style={{ backgroundColor: color }}
-                />
-              ))}
+          {/* Foto e cor de identificação */}
+          <div className="p-3.5 rounded-2xl border border-slate-200 bg-slate-50/70 space-y-3">
+            <div>
+              <label className="block text-xs font-bold text-slate-800">
+                Foto da pessoa
+              </label>
+              <p className="text-[10px] text-slate-500 mt-0.5">
+                Opcional. A foto é recortada em quadrado e comprimida automaticamente para ocupar menos espaço.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <div
+                className="w-16 h-16 rounded-2xl overflow-hidden flex items-center justify-center text-white text-xl font-extrabold shadow-sm shrink-0"
+                style={{ backgroundColor: avatarColor }}
+              >
+                {avatarImage ? (
+                  <img src={avatarImage} alt="Prévia da foto" className="w-full h-full object-cover" />
+                ) : (
+                  <span>{(name.trim().charAt(0) || '?').toUpperCase()}</span>
+                )}
+              </div>
+
+              <div className="flex flex-wrap gap-2">
+                <label className="inline-flex items-center justify-center px-3 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold cursor-pointer transition-colors">
+                  {avatarProcessing ? 'Processando...' : avatarImage ? 'Alterar foto' : 'Escolher foto'}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleAvatarFile}
+                    disabled={avatarProcessing}
+                    className="hidden"
+                  />
+                </label>
+
+                {avatarImage && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setAvatarImage('');
+                      setAvatarError(null);
+                    }}
+                    className="px-3 py-2 rounded-xl border border-rose-200 bg-white text-rose-700 text-xs font-bold hover:bg-rose-50 transition-colors"
+                  >
+                    Remover foto
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {avatarError && (
+              <p className="text-[11px] font-semibold text-rose-600">{avatarError}</p>
+            )}
+
+            <div>
+              <label className="block text-[11px] font-semibold text-slate-600 mb-1.5">
+                Cor usada quando não houver foto
+              </label>
+              <div className="flex items-center gap-2 flex-wrap">
+                {AVATAR_COLORS.map((color) => (
+                  <button
+                    key={color}
+                    type="button"
+                    onClick={() => setAvatarColor(color)}
+                    aria-label={`Usar cor ${color}`}
+                    className={`w-7 h-7 rounded-full transition-transform ${
+                      avatarColor === color
+                        ? 'scale-125 ring-2 ring-offset-2 ring-slate-900'
+                        : 'hover:scale-110'
+                    }`}
+                    style={{ backgroundColor: color }}
+                  />
+                ))}
+              </div>
             </div>
           </div>
 
