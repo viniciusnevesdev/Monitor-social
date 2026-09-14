@@ -4,6 +4,12 @@ PWA de monitoramento de interações sociais. Esta branch é destinada a testes 
 
 ## Versão atual
 
+**v1.4.0-beta.17**
+
+- Reorganiza os cartões do Radar e Pessoas conforme o cartão de referência, com situação ao lado do nome e tags logo abaixo.
+- Ajusta proporções, espaçamentos e tamanhos de avatar, conversa, indicadores, lembrete e ações sem reintroduzir sobreposição.
+- Substitui os ícones X pelo novo símbolo circular solicitado.
+
 **v1.4.0-beta.16**
 
 - Corrige a legibilidade do ícone de WhatsApp nos cartões do Radar antes de abrir o contato.
