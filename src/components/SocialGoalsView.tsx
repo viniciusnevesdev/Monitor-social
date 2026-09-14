@@ -242,12 +242,10 @@ export const SocialGoalsView: React.FC<SocialGoalsViewProps> = ({
                 className="py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3"
               >
                 <div className="flex items-center gap-3">
-                  <div
-                    className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-sm shrink-0"
-                    style={{ backgroundColor: contact.avatarColor || '#6366f1' }}
-                  >
-                    {contact.name.charAt(0).toUpperCase()}
-                  </div>
+                  <ContactAvatar
+                    contact={contact}
+                    className="w-10 h-10 rounded-xl text-sm shrink-0"
+                  />
 
                   <div>
                     <button
