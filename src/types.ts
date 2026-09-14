@@ -21,6 +21,7 @@ export interface Contact {
   name: string;
   nickname?: string;
   avatarColor: string;
+  avatarImage?: string; // Foto comprimida do contato em data URL; usa inicial/color como fallback
   phone?: string;
   email?: string;
   category: ContactCategory;
