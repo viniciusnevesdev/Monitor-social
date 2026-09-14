@@ -244,6 +244,7 @@ export default function App() {
         name: contactData.name || 'Sem nome',
         nickname: contactData.nickname,
         avatarColor: contactData.avatarColor || '#6366f1',
+        avatarImage: contactData.avatarImage,
         phone: contactData.phone,
         email: contactData.email,
         category: contactData.category || 'amigos_proximos',
