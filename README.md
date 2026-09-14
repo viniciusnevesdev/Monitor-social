@@ -4,6 +4,13 @@ PWA de monitoramento de interações sociais. Esta branch é destinada a testes 
 
 ## Versão atual
 
+**v1.4.0-beta.18**
+
+- Permite escolher, trocar e remover uma foto para cada pessoa ao cadastrar ou editar o contato.
+- Recorta e comprime a imagem automaticamente antes de salvar para reduzir o uso de armazenamento.
+- Exibe a foto no Radar, detalhes, matriz de relacionamentos, lembretes e resumo semanal, mantendo a inicial colorida como fallback.
+- Inclui a foto nos backups JSON e na sincronização em nuvem.
+
 **v1.4.0-beta.17**
 
 - Reorganiza os cartões do Radar e Pessoas conforme o cartão de referência, com situação ao lado do nome e tags logo abaixo.
