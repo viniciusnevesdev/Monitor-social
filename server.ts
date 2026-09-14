@@ -9,7 +9,7 @@ const APP_VERSION = '1.4.0-beta.18';
 const PORT = Number(process.env.PORT) || 3000;
 const IS_PRODUCTION = process.env.NODE_ENV === 'production' || Boolean(process.env.RAILWAY_ENVIRONMENT_NAME);
 
-app.use(express.json({ limit: '10mb' }));
+app.use(express.json({ limit: '25mb' }));
 
 // Diretório para armazenamento local do cofre de sincronização em nuvem
 const DATA_DIR = process.env.RAILWAY_VOLUME_MOUNT_PATH
