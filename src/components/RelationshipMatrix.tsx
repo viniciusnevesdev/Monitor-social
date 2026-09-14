@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Contact } from '../types';
 import { computeContactScores, formatTimeAgo, CATEGORY_LABELS } from '../utils/calculations';
 import { ScoreBadge } from './ScoreBadge';
+import { ContactAvatar } from './ContactAvatar';
 import {
   Grid,
   Info,
@@ -154,23 +155,20 @@ export const RelationshipMatrix: React.FC<RelationshipMatrixProps> = ({
               style={{ left: `${xPercent}%`, top: `${yPercent}%` }}
             >
               {/* Avatar Bubble */}
-              <div
-                className={`relative flex items-center justify-center rounded-2xl text-white font-bold text-xs shadow-md transition-all duration-300 ${
+              <ContactAvatar
+                contact={contact}
+                className={`rounded-2xl text-xs shadow-md transition-all duration-300 ${
                   isHovered
                     ? 'w-11 h-11 scale-125 ring-4 ring-indigo-500 z-30 shadow-xl'
                     : isNeglected
                     ? 'w-9 h-9 ring-2 ring-rose-400 animate-bounce shadow-rose-500/20'
                     : 'w-8 h-8 hover:scale-110'
                 }`}
-                style={{ backgroundColor: contact.avatarColor || '#6366f1' }}
               >
-                {contact.name.charAt(0).toUpperCase()}
-
-                {/* Badge de alerta se negligenciado */}
                 {isNeglected && (
                   <span className="absolute -top-1 -right-1 w-3 h-3 bg-rose-500 rounded-full border-2 border-white ring-1 ring-rose-300" />
                 )}
-              </div>
+              </ContactAvatar>
 
               {/* Tag com o nome */}
               <span className="absolute top-full left-1/2 -translate-x-1/2 mt-1 px-1.5 py-0.5 rounded-md bg-white/90 backdrop-blur-xs border border-slate-200 text-[10px] font-bold text-slate-800 whitespace-nowrap opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all shadow-xs">
@@ -185,12 +183,10 @@ export const RelationshipMatrix: React.FC<RelationshipMatrixProps> = ({
       {activeContact ? (
         <div className="p-4 rounded-2xl bg-indigo-50/80 border border-indigo-200/70 flex flex-col sm:flex-row sm:items-center justify-between gap-3 animate-fadeIn">
           <div className="flex items-center gap-3">
-            <div
-              className="w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold text-base shrink-0 shadow-sm"
-              style={{ backgroundColor: activeContact.contact.avatarColor || '#6366f1' }}
-            >
-              {activeContact.contact.name.charAt(0).toUpperCase()}
-            </div>
+            <ContactAvatar
+              contact={activeContact.contact}
+              className="w-12 h-12 rounded-xl text-base shrink-0 shadow-sm"
+            />
             <div>
               <div className="flex items-center gap-2">
                 <h4 className="font-bold text-slate-900 text-sm">
