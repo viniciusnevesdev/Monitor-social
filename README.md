@@ -1,8 +1,17 @@
-# Laços — Beta
+# Laços
 
-PWA de monitoramento de interações sociais. Esta branch é destinada a testes e não deve compartilhar armazenamento com a versão oficial.
+PWA de monitoramento de interações sociais. A branch `main` corresponde à versão oficial.
 
 ## Versão atual
+
+**v1.4.1**
+
+- Permite escolher, trocar e remover uma foto para cada pessoa ao cadastrar ou editar o contato.
+- Recorta e comprime a imagem automaticamente antes de salvar para reduzir o uso de armazenamento.
+- Exibe a foto no Radar, detalhes, matriz de relacionamentos, lembretes e resumo semanal, mantendo a inicial colorida como fallback.
+- Inclui a foto nos backups JSON e na sincronização em nuvem.
+
+### Histórico de desenvolvimento
 
 **v1.4.0-beta.17**
 
