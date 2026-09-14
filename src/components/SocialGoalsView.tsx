@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { ContactAvatar } from './ContactAvatar';
 import { Contact, SocialGoal } from '../types';
 import { computeContactScores, formatTimeAgo, CATEGORY_LABELS } from '../utils/calculations';
 import {
