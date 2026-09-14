@@ -22,7 +22,7 @@ const AVATAR_COLORS = [
 ];
 
 const MAX_AVATAR_FILE_SIZE = 20 * 1024 * 1024;
-const AVATAR_OUTPUT_SIZE = 512;
+const AVATAR_OUTPUT_SIZE = 320;
 
 function compressAvatarPhoto(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -69,7 +69,7 @@ function compressAvatarPhoto(file: File): Promise<string> {
           outputSize
         );
 
-        resolve(canvas.toDataURL('image/jpeg', 0.82));
+        resolve(canvas.toDataURL('image/jpeg', 0.76));
       } catch (error) {
         reject(error instanceof Error ? error : new Error('Não foi possível processar a foto.'));
       } finally {
