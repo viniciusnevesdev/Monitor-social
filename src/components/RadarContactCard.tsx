@@ -95,16 +95,18 @@ export const RadarContactCard: React.FC<RadarContactCardProps> = ({
         </div>
 
         <div className="radar-card-header-content">
-          <div {...elementProps('name')} className={`${elementProps('name').className} radar-card-name`} style={typographyStyle(layout.elements.name)}>
-            {contact.name}
+          <div className="radar-card-header-top">
+            <div {...elementProps('name')} className={`${elementProps('name').className} radar-card-name`} style={typographyStyle(layout.elements.name)}>
+              {contact.name}
+            </div>
+            <div {...elementProps('status')} className={`${elementProps('status').className} radar-card-status`}>
+              <ScoreBadge type="status" value={scores.status} size="sm" />
+            </div>
           </div>
           <div className="radar-card-header-meta">
             <div {...elementProps('category')} className={`${elementProps('category').className} radar-card-category`} style={typographyStyle(layout.elements.category)}>
               <span className={`radar-card-category-badge ${cat.badgeBg}`}>{cat.label}</span>
               {contact.nickname && <span className="radar-card-nickname">{contact.nickname}</span>}
-            </div>
-            <div {...elementProps('status')} className={`${elementProps('status').className} radar-card-status`}>
-              <ScoreBadge type="status" value={scores.status} size="sm" />
             </div>
           </div>
         </div>
