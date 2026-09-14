@@ -14,7 +14,7 @@ export default defineConfig(() => {
         includeAssets: [
           'beta-icon-v1.4.0-beta.2-favicon.png',
           'beta-icon-v1.4.0-beta.2-apple.png',
-          'beta-icon-v1.4.0-beta.2-192.png',
+          'pwa-192x192.png',
           'beta-icon-v1.4.0-beta.2-512.png',
           'beta-icon-v1.4.0-beta.2-maskable.png',
         ],
