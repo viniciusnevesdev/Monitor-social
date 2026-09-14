@@ -4,6 +4,7 @@ import { formatTimeAgo, CATEGORY_LABELS } from '../utils/calculations';
 import { RadarCardLayout, RadarElementId, RadarElementLayout } from '../utils/radarLayout';
 import { AlertTriangle, Calendar, Heart, MessageCircle, PlusCircle, Sparkles, Star } from '../icons';
 import { ScoreBadge } from './ScoreBadge';
+import { ContactAvatar } from './ContactAvatar';
 
 interface RadarContactCardProps {
   contact: Contact;
@@ -86,12 +87,7 @@ export const RadarContactCard: React.FC<RadarContactCardProps> = ({
     >
       <header className="radar-card-header">
         <div {...elementProps('avatar')} className={`${elementProps('avatar').className} radar-card-avatar-wrap`}>
-          <div
-            className="radar-card-avatar"
-            style={{ backgroundColor: contact.avatarColor || '#6366f1' }}
-          >
-            {contact.name.charAt(0).toUpperCase()}
-          </div>
+          <ContactAvatar contact={contact} className="radar-card-avatar" />
         </div>
 
         <div className="radar-card-header-content">
