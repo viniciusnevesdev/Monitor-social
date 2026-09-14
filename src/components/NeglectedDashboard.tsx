@@ -5,6 +5,7 @@ import { ScoreBadge } from './ScoreBadge';
 import { WeeklySocialDigest } from './WeeklySocialDigest';
 import { RelationshipMatrix } from './RelationshipMatrix';
 import { RadarContactCard } from './RadarContactCard';
+import { ContactAvatar } from './ContactAvatar';
 import { RadarCardLayout } from '../utils/radarLayout';
 import {
   MessageCircle,
@@ -306,12 +307,10 @@ export const NeglectedDashboard: React.FC<NeglectedDashboardProps> = ({
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-center gap-3">
                       {/* Avatar */}
-                      <div
-                        className="w-12 h-12 rounded-2xl flex items-center justify-center text-white font-bold text-lg shadow-sm shrink-0"
-                        style={{ backgroundColor: contact.avatarColor || '#6366f1' }}
-                      >
-                        {contact.name.charAt(0).toUpperCase()}
-                      </div>
+                      <ContactAvatar
+                        contact={contact}
+                        className="w-12 h-12 rounded-2xl text-lg shadow-sm shrink-0"
+                      />
 
                       <div>
                         <div className="flex items-center gap-2">
