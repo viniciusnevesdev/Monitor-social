@@ -1,4 +1,5 @@
 import React from 'react';
+import { ContactAvatar } from './ContactAvatar';
 import { Contact } from '../types';
 import { computeContactScores, formatTimeAgo } from '../utils/calculations';
 import {
@@ -130,12 +131,10 @@ export const WeeklySocialDigest: React.FC<WeeklySocialDigestProps> = ({
                 <div>
                   <div className="flex items-center justify-between gap-2">
                     <div className="flex items-center gap-2">
-                      <div
-                        className="w-8 h-8 rounded-lg flex items-center justify-center text-white font-bold text-xs"
-                        style={{ backgroundColor: contact.avatarColor || '#6366f1' }}
-                      >
-                        {contact.name.charAt(0)}
-                      </div>
+                      <ContactAvatar
+                        contact={contact}
+                        className="w-8 h-8 rounded-lg text-xs"
+                      />
                       <div>
                         <span className="font-bold text-white text-xs block leading-tight">
                           {contact.name}
