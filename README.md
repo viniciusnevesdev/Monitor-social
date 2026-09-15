@@ -4,6 +4,11 @@ PWA de monitoramento de interações sociais. A branch `main` corresponde à ver
 
 ## Versão atual
 
+**v1.4.5**
+
+- Remove todas as regras globais que forçavam contornos, preenchimentos e espessuras nos ícones.
+- Preserva a aparência natural definida pelo SVG original em menus, indicadores e ações do Radar.
+
 **v1.4.4**
 
 - Remove o contorno artificial que engrossava os ícones SVG preenchidos em diferentes áreas do app.
