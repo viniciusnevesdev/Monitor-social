@@ -4,6 +4,12 @@ PWA de monitoramento de interações sociais. Esta branch é destinada a testes 
 
 ## Versão atual
 
+**v1.4.0-beta.19**
+
+- Adiciona o botão **Ampliar gráfico** na Matriz de Relacionamentos.
+- Abre uma visualização em tela inteira, com área maior para as bolhas, nomes maiores e rolagem horizontal quando a tela do celular estiver em retrato.
+- Mantém a matriz interativa: tocar numa pessoa abre seu perfil e o botão Registrar continua disponível na visualização ampliada.
+
 **v1.4.0-beta.18**
 
 - Permite escolher, trocar e remover uma foto para cada pessoa ao cadastrar ou editar o contato.
