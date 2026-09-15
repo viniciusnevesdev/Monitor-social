@@ -307,6 +307,9 @@ html[data-theme='dark'] .radar-score-pill span { color:currentColor; }
 .radar-card:not(.radar-card--editing) { height:auto; min-height:0; padding:18px; overflow:visible; }
 .radar-card:not(.radar-card--editing) .radar-card-header { position:static; }
 .radar-card:not(.radar-card--editing) .radar-card-element { position:static; width:auto !important; height:auto !important; }
+/* O avatar precisa manter dimensões próprias. Sem esta exceção, a regra acima
+   reduz o wrapper a altura zero porque o conteúdo da foto é absoluto. */
+.radar-card:not(.radar-card--editing) .radar-card-avatar-wrap { width:72px !important; height:72px !important; }
 .radar-card:not(.radar-card--editing) .radar-card-conversation { margin-top:16px; }
 .radar-card:not(.radar-card--editing) .radar-card-scores { margin-top:12px; min-height:64px; }
 .radar-card:not(.radar-card--editing) .radar-card-memory { margin-top:12px; min-height:78px; }
