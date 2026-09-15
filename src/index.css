@@ -54,6 +54,14 @@
   overflow: visible;
 }
 
+/* SVGs preenchidos não devem herdar strokes forçados pelos componentes onde
+   são usados. Isso evita a borda duplicada que engrossa a silhueta. Ícones
+   realmente lineares usam fill="none" e preservam o próprio traço. */
+.app-custom-icon > svg [fill]:not([fill='none']),
+.app-custom-icon > svg[fill]:not([fill='none']) :where(path, rect, circle, ellipse, polygon, polyline):not([fill='none']) {
+  stroke: none !important;
+}
+
 
 /* Temas do Laços ---------------------------------------------------------- */
 html,
