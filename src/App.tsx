@@ -68,7 +68,9 @@ export default function App() {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) {
+        // Uma lista vazia é um estado válido: significa que o usuário decidiu
+        // começar o Laços sem os exemplos de demonstração.
+        if (Array.isArray(parsed)) {
           return parsed;
         }
       }
@@ -276,6 +278,17 @@ export default function App() {
     alert('Dados de exemplo restaurados com sucesso!');
   };
 
+  // Limpa somente os dados pessoais deste aparelho, sem reintroduzir exemplos.
+  // Backups JSON e o cofre de sincronização permanecem preservados.
+  const handleClearAllPersonalData = () => {
+    setContacts([]);
+    localStorage.removeItem(STORAGE_KEY);
+    setSelectedContactDetailId(null);
+    setIsLogModalOpen(false);
+    setIsFormModalOpen(false);
+    setCurrentTab('painel');
+  };
+
   // Importar dados via JSON
   const handleImportData = (importedContacts: Contact[]) => {
     setContacts(importedContacts);
@@ -421,6 +434,7 @@ export default function App() {
           <SettingsView
             contacts={contacts}
             onResetToDefault={handleResetToDefault}
+            onClearAllPersonalData={handleClearAllPersonalData}
             onImportData={handleImportData}
             deferredPrompt={deferredPrompt}
             onInstallPwa={handleInstallPwa}
