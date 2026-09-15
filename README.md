@@ -4,6 +4,13 @@ PWA de monitoramento de interações sociais. A branch `main` corresponde à ver
 
 ## Versão atual
 
+**v1.4.2**
+
+- Adiciona **Começar do zero** nos Ajustes, com o botão **Apagar todos os dados deste aparelho**.
+- Remove contatos e conversas locais sem restaurar os exemplos fictícios.
+- Corrige a persistência de lista vazia: depois de apagar os dados, o app permanece vazio ao ser reaberto.
+- Backups JSON e dados já enviados à nuvem continuam preservados e são informados antes da confirmação.
+
 **v1.4.1**
 
 - Permite escolher, trocar e remover uma foto para cada pessoa ao cadastrar ou editar o contato.
