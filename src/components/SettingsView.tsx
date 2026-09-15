@@ -4,6 +4,7 @@ import {
   Download,
   Upload,
   RotateCcw,
+  Trash2,
   Smartphone,
   ShieldCheck,
   Sparkles,
@@ -74,6 +75,7 @@ const SUGGESTIONS_LIST = [
 interface SettingsViewProps {
   contacts: Contact[];
   onResetToDefault: () => void;
+  onClearAllPersonalData: () => void;
   onImportData: (contacts: Contact[]) => void;
   deferredPrompt: any;
   onInstallPwa: () => void;
@@ -85,6 +87,7 @@ interface SettingsViewProps {
 export const SettingsView: React.FC<SettingsViewProps> = ({
   contacts,
   onResetToDefault,
+  onClearAllPersonalData,
   onImportData,
   deferredPrompt,
   onInstallPwa,
@@ -463,6 +466,27 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
           >
             <RotateCcw className="w-4 h-4" />
             Restaurar Dados de Exemplo
+          </button>
+        </div>
+
+        <div className="rounded-2xl border border-rose-200 bg-rose-50 p-4 space-y-3">
+          <div>
+            <h3 className="text-sm font-bold text-rose-800">Começar do zero</h3>
+            <p className="mt-1 text-xs leading-relaxed text-rose-700">
+              Apaga todos os contatos e conversas salvos neste aparelho e deixa o Laços vazio, pronto para os seus dados. Backups JSON e dados já enviados à nuvem não são apagados.
+            </p>
+          </div>
+          <button
+            onClick={() => {
+              if (confirm('Apagar todos os contatos e conversas deste aparelho?\n\nO Laços ficará vazio. Essa ação não apaga backups JSON nem dados já enviados à nuvem.')) {
+                onClearAllPersonalData();
+              }
+            }}
+            type="button"
+            className="inline-flex items-center gap-2 rounded-xl bg-rose-600 px-4 py-2.5 text-xs font-bold text-white shadow-sm shadow-rose-600/20 transition-colors hover:bg-rose-700"
+          >
+            <Trash2 className="w-4 h-4" />
+            Apagar todos os dados deste aparelho
           </button>
         </div>
 
