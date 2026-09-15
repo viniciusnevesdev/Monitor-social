@@ -4,6 +4,11 @@ PWA de monitoramento de interações sociais. A branch `main` corresponde à ver
 
 ## Versão atual
 
+**v1.4.3**
+
+- Corrige a foto e a inicial das pessoas que ficavam invisíveis nos cartões do Radar da página inicial.
+- Mantém o espaço do avatar com tamanho fixo, sem alterar o restante do layout aprovado dos cartões.
+
 **v1.4.2**
 
 - Adiciona **Começar do zero** nos Ajustes, com o botão **Apagar todos os dados deste aparelho**.
